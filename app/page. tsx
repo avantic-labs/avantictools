@@ -1,0 +1,63 @@
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Footer from "@/components/Footer";
+import ToolCard from "@/components/ToolCard";
+import UsernameGenerator from "@/components/UsernameGenerator";
+import BioGenerator from "@/components/BioGenerator";
+import { tools } from "@/data/tools";
+
+export default function HomePage() {
+  return (
+    <>
+      <Navbar />
+
+      <main>
+        <Hero />
+
+        <section className="section">
+          <div className="container">
+            <div className="section-heading">
+              <span className="badge">AI Utility Platform</span>
+
+              <h2>Powerful AI Tools Built For Daily Use</h2>
+
+              <p>
+                AVANTIC TOOLS delivers high-performance AI utility tools designed
+                for creators, gamers, developers, entrepreneurs, students, and
+                digital brands.
+              </p>
+            </div>
+
+            <div className="tool-grid">
+              {tools.map((tool) => (
+                <ToolCard key={tool.id} tool={tool} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <UsernameGenerator />
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <BioGenerator />
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <div className="adsense-box">
+              <span>Google AdSense Placement Area</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
