@@ -22,9 +22,9 @@ export default function HomePage() {
               <h2>Powerful AI Tools Built For Daily Use</h2>
 
               <p>
-                AVANTIC TOOLS delivers high-performance AI utility tools designed
-                for creators, gamers, developers, entrepreneurs, students, and
-                digital brands.
+                AVANTIC TOOLS delivers premium futuristic AI utility tools
+                designed for creators, gamers, developers, entrepreneurs,
+                students, startups, and digital brands.
               </p>
             </div>
 
@@ -51,7 +51,7 @@ export default function HomePage() {
         <section className="section">
           <div className="container">
             <div className="adsense-box">
-              <span>Google AdSense Placement Area</span>
+              <span>Advertisement Space</span>
             </div>
           </div>
         </section>
