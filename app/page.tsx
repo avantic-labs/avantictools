@@ -60,3 +60,116 @@ export default function HomePage() {
     </main>
   );
 }
+
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function PrivacyPolicyPage() {
+  return (
+    <>
+      <Navbar />
+
+      <main className="legal-page container">
+        <h1>Privacy Policy</h1>
+
+        <p>
+          AVANTIC Labs respects your privacy and is committed to protecting user
+          data.
+        </p>
+
+        <h2>Information Collection</h2>
+
+        <p>
+          Our tools are designed to function without requiring account creation
+          or invasive tracking.
+        </p>
+
+        <h2>Advertising</h2>
+
+        <p>
+          Google AdSense and third-party advertisers may use cookies to serve
+          relevant ads.
+        </p>
+
+        <h2>Contact</h2>
+
+        <p>official.avanticlabs@gmail.com</p>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
+
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function TermsPage() {
+  return (
+    <>
+      <Navbar />
+
+      <main className="legal-page container">
+        <h1>Terms of Service</h1>
+
+        <p>
+          By using AVANTIC Labs tools, you agree to use the platform responsibly
+          and legally.
+        </p>
+
+        <h2>Usage</h2>
+
+        <p>
+          Users may freely use the platform tools for personal and commercial
+          productivity purposes.
+        </p>
+
+        <h2>Availability</h2>
+
+        <p>
+          We continuously improve our services and may update features over
+          time.
+        </p>
+
+        <h2>Support</h2>
+
+        <p>official.avanticlabs@gmail.com</p>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
+
+
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function ContactPage() {
+  return (
+    <>
+      <Navbar />
+
+      <main className="legal-page container">
+        <h1>Contact AVANTIC Labs</h1>
+
+        <p>
+          Need support, business inquiries, partnerships, or advertising
+          discussions?
+        </p>
+
+        <div className="contact-box">
+          <h2>Email Support</h2>
+
+          <p>official.avanticlabs@gmail.com</p>
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
+
