@@ -1,1 +1,38 @@
-terms
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function TermsPage() {
+  return (
+    <>
+      <Navbar />
+
+      <main className="legal-page container">
+        <h1>Terms of Service</h1>
+
+        <p>
+          By using AVANTIC TOOLS, users agree to use the platform responsibly,
+          ethically, and legally.
+        </p>
+
+        <h2>Platform Usage</h2>
+
+        <p>
+          Our AI tools are intended for productivity, creativity, educational,
+          and entertainment purposes.
+        </p>
+
+        <h2>Service Improvements</h2>
+
+        <p>
+          Features and platform functionality may evolve and improve over time.
+        </p>
+
+        <h2>Support</h2>
+
+        <p>official.avanticlabs@gmail.com</p>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
