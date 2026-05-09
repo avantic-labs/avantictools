@@ -1,1 +1,27 @@
-contact 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function ContactPage() {
+  return (
+    <>
+      <Navbar />
+
+      <main className="legal-page container">
+        <h1>Contact AVANTIC TOOLS</h1>
+
+        <p>
+          Reach out for partnerships, support, collaborations, advertising, or
+          business inquiries.
+        </p>
+
+        <div className="contact-card">
+          <h2>Email Support</h2>
+
+          <p>official.avanticlabs@gmail.com</p>
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
