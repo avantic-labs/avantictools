@@ -1,1 +1,35 @@
-footer 
+import Link from "next/link";
+
+export default function Footer() {
+  return (
+    <footer className="footer">
+      <div className="container footer-grid">
+        <div>
+          <h3>AVANTIC TOOLS</h3>
+
+          <p>
+            Premium futuristic AI utility tools built under AVANTIC LABS for
+            creators, developers, and modern internet users.
+          </p>
+        </div>
+
+        <div>
+          <h4>Legal</h4>
+
+          <Link href="/privacy-policy">Privacy Policy</Link>
+          <Link href="/terms">Terms of Service</Link>
+        </div>
+
+        <div>
+          <h4>Support</h4>
+
+          <p>official.avanticlabs@gmail.com</p>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        © 2026 AVANTIC TOOLS. All rights reserved.
+      </div>
+    </footer>
+  );
+}
