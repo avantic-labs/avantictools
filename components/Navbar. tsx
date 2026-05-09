@@ -1,1 +1,21 @@
-Navbar 
+import Link from "next/link";
+
+export default function Navbar() {
+  return (
+    <header className="navbar">
+      <div className="container navbar-inner">
+        <Link href="/" className="logo">
+          <span className="logo-main">AVANTIC</span>
+          <span className="logo-sub">TOOLS</span>
+        </Link>
+
+        <nav className="nav-links">
+          <Link href="/">Home</Link>
+          <Link href="/privacy-policy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+          <Link href="/contact">Contact</Link>
+        </nav>
+      </div>
+    </header>
+  );
+} 
