@@ -1,1 +1,39 @@
-policy 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+export default function PrivacyPolicyPage() {
+  return (
+    <>
+      <Navbar />
+
+      <main className="legal-page container">
+        <h1>Privacy Policy</h1>
+
+        <p>
+          AVANTIC TOOLS respects your privacy and is committed to protecting
+          user information while maintaining platform transparency.
+        </p>
+
+        <h2>Information Collection</h2>
+
+        <p>
+          Our tools are designed to function without requiring unnecessary user
+          information or intrusive data collection.
+        </p>
+
+        <h2>Advertising</h2>
+
+        <p>
+          Third-party vendors including Google may use cookies to display
+          relevant advertisements through Google AdSense.
+        </p>
+
+        <h2>Support Contact</h2>
+
+        <p>official.avanticlabs@gmail.com</p>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
