@@ -39,7 +39,8 @@ describe("utility analytics privacy boundary", () => {
   });
 });
 
-it("uses the five canonical live Day-1 utility routes", () => {
+it("uses exactly twelve canonical live workflow routes", () => {
+  expect(utilityIds).toHaveLength(12);
   expect(utilityTools.map((tool) => tool.slug)).toEqual([...utilityIds]);
   for (const tool of utilityTools) expect(tool.route).toBe(`/tools/${tool.slug}`);
 });

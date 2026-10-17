@@ -11,7 +11,11 @@ export default defineConfig({
   // Do not persist input, passwords or clipboard contents in traces/videos/screenshots.
   use: { baseURL, trace: "off", screenshot: "off", video: "off" },
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"] } },
+    { name: "small-mobile", use: { ...devices["Pixel 7"], viewport: { width: 320, height: 740 } } },
+    { name: "tablet", use: { ...devices["Desktop Chrome"], viewport: { width: 768, height: 1024 } } },
+    { name: "laptop", use: { ...devices["Desktop Chrome"], viewport: { width: 1024, height: 768 } } },
+    { name: "desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 900 } } },
+    { name: "wide-desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1920, height: 1080 } } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {

@@ -1,93 +1,90 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { day1Categories, liveDay1Tools } from "@/data/day1-tools";
-
+import { ArrowUpRight, ScanLine } from "lucide-react";
+import { Catalog } from "@/components/product/Catalog";
+import { tools, comingSoon } from "@/data/tools";
+export const metadata: Metadata = {
+  title: { absolute: "AVANTIC Tools — useful tools, no friction" },
+  description:
+    "Scan documents, fix files, prepare application photos, create invoices and handle everyday tasks. Free tools that work on your device.",
+  alternates: { canonical: "/" },
+};
 export default function HomePage() {
-  const featured = liveDay1Tools.filter((tool) => tool.workflowType === "connected");
-
   return (
-    <main className="site-shell">
-      <header className="topbar">
-        <Link href="/" className="brand">
-          <span className="brand-mark" aria-hidden="true">A</span>
-          <span>
-            <strong>AVANTIC</strong>{" "}
-            <small>TOOLS</small>
-          </span>
-        </Link>
-        <span className="phase-label">Phase 1 foundation</span>
-      </header>
-
-      <section className="hero-shell">
-        <p className="eyebrow">AVANTIC LABS</p>
-        <h1>Useful tools. Zero friction.</h1>
-        <p className="hero-copy">
-          AVANTIC Tools is being rebuilt as one shared platform for trustworthy AI workflows
-          and fast everyday utilities.
+    <main id="main" className="catalog-shell">
+      <section className="product-intro">
+        <h1>
+          Useful tools.
+          <br />
+          No friction.
+        </h1>
+        <p>
+          Scan documents, fix files, work with text and handle everyday tasks
+          without complicated software.
         </p>
       </section>
-
-      <section className="catalog-section" aria-labelledby="featured-heading">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Connected workflows</p>
-            <h2 id="featured-heading">Featured workflows</h2>
-          </div>
-          <p>Day-1 AI experiences are designed as complete workflows, not isolated buttons.</p>
+      <section className="featured-section" aria-labelledby="featured-heading">
+        <div className="section-title">
+          <h2 id="featured-heading">Featured workflows</h2>
+          <span>Work from start to finish</span>
         </div>
-
-        <div className="tool-grid featured-grid">
-          {featured.map((tool) => (
-            <article className="tool-card featured-card" key={tool.slug}>
-              <div>
-                <span className="tool-type">Connected workflow</span>
-                <h3>{tool.name}</h3>
-                <p>{tool.description}</p>
-              </div>
-              <Link href={tool.route} prefetch={false} className="card-link">
-                Open workflow <span aria-hidden="true">→</span>
-              </Link>
+        <div className="featured-strip">
+          <article className="files-feature">
+            <div className="feature-icon">
+              <ScanLine size={24} strokeWidth={1.5} aria-hidden="true" />
+            </div>
+            <div>
+              <h3>AVANTIC Files</h3>
+              <p>From a photo of a page to a file ready to send.</p>
+              <nav aria-label="AVANTIC Files">
+                <Link href="/tools/scan-to-pdf" prefetch={false}>
+                  Scan to PDF <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+                <Link href="/tools/pdf-organizer" prefetch={false}>
+                  Organize a PDF
+                </Link>
+                <Link href="/tools/file-compressor" prefetch={false}>
+                  Compress a file
+                </Link>
+              </nav>
+            </div>
+          </article>
+          <article className="application-feature">
+            <h3>Get an application image ready</h3>
+            <p>
+              Crop a photo or signature to the portal’s dimensions and file
+              limit.
+            </p>
+            <Link
+              href="/tools/application-photo-signature-prep"
+              className="text-link"
+              prefetch={false}
+            >
+              Prepare an image <ArrowUpRight size={16} aria-hidden="true" />
+            </Link>
+          </article>
+        </div>
+      </section>
+      <Catalog tools={tools} />
+      <section className="coming-soon" aria-labelledby="coming-heading">
+        <div className="section-title">
+          <h2 id="coming-heading">Coming soon</h2>
+          <span>Planned, not available yet</span>
+        </div>
+        <div className="roadmap-grid">
+          {comingSoon.map((item) => (
+            <article key={item.name}>
+              <span className="caption">
+                {item.group === "Candidate"
+                  ? "Candidate"
+                  : `Coming soon · ${item.group}`}
+              </span>
+              <h3>{item.name}</h3>
+              <p>{item.description}</p>
             </article>
           ))}
         </div>
       </section>
-
-      {day1Categories.map((category) => {
-        const tools = liveDay1Tools.filter((tool) => tool.category === category.id);
-
-        return (
-          <section className="catalog-section" key={category.id} aria-labelledby={`${category.id}-heading`}>
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Day 1</p>
-                <h2 id={`${category.id}-heading`}>{category.label}</h2>
-              </div>
-              <p>{category.description}</p>
-            </div>
-
-            <div className="tool-grid">
-              {tools.map((tool) => (
-                <article className="tool-card" key={tool.slug}>
-                  <div>
-                    <span className="tool-type">
-                      {tool.workflowType === "connected" ? "Connected workflow" : "Client-side utility"}
-                    </span>
-                    <h3>{tool.name}</h3>
-                    <p>{tool.description}</p>
-                  </div>
-                  <Link href={tool.route} prefetch={false} className="card-link">
-                    Open tool <span aria-hidden="true">→</span>
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </section>
-        );
-      })}
-
-      <footer className="site-footer">
-        <p>AVANTIC Tools · An AVANTIC LABS product</p>
-        <p>Foundation preview — product workflows are being implemented against the approved Day-1 architecture.</p>
-      </footer>
     </main>
   );
 }

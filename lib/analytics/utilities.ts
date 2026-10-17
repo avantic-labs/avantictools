@@ -2,9 +2,9 @@ import type { AnalyticsEvent } from "./events";
 import { isUtilityId, type UtilityId } from "../utilities/catalog";
 
 export const UTILITY_ANALYTICS_EVENT = "avantic:analytics";
-export type UtilityAction = "count" | "convert" | "generate" | "copy" | "download";
+export type UtilityAction = "count" | "convert" | "generate" | "copy" | "download" | "process" | "calculate" | "share";
 type UtilityEventName = "tool_viewed" | "tool_completed";
-const actions: readonly UtilityAction[] = ["count", "convert", "generate", "copy", "download"];
+const actions: readonly UtilityAction[] = ["count", "convert", "generate", "copy", "download", "process", "calculate", "share"];
 
 /**
  * A deliberately narrow, browser-local bridge to the foundation analytics contract.
