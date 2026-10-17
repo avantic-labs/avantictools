@@ -61,6 +61,8 @@ by design-system section 33.4 (white text contrast about 6.18:1).
 
 Fixed the mobile search icon's missing accessible name, file-picker truncation,
 cramped page controls, helper text becoming control names, and modal centering.
+Hosted visual review also caught a truncated invoice date on the narrowest phone;
+invoice dates now stack on mobile so the full native date control stays readable.
 Spacing/type/focus/state tokens are shared. The document preview remains the main
 working surface; no decorative gradients, glows or animation choreography remain.
 
@@ -137,6 +139,7 @@ Only empty workspaces and generated synthetic fixtures appear in these images.
 - [Mobile catalog](catalog-mobile.png)
 - [Mobile scan/crop workspace](scan-mobile.png)
 - [Small-mobile search](search-small-mobile.png)
+- [Small-mobile invoice editor and full date controls](invoice-mobile.png)
 - [Rendered synthetic invoice export](invoice-export.png)
 
 ## Reproduce

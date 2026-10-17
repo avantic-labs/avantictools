@@ -837,6 +837,9 @@ progress {
 .crop-inputs label {
   font-size: var(--text-small);
 }
+.invoice-dates {
+  grid-template-columns: 1fr;
+}
 .editing-controls {
   display: grid;
   gap: var(--space-4);
@@ -916,6 +919,9 @@ details > summary {
   min-height: var(--control-height);
 }
 @media (min-width: 640px) {
+  .invoice-dates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .catalog-grid,
   .roadmap-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

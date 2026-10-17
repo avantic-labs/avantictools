@@ -170,7 +170,7 @@ export function InvoiceMaker() {
           />
           <span className="hint">Use your business’s own numbering.</span>
         </label>
-        <div className="paired-fields">
+        <div className="paired-fields invoice-dates">
           <label className="field">
             Issue date *
             <input
