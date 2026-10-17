@@ -66,6 +66,28 @@ export async function organizePdfCore(
       throw new FileProblem(
         "A source page is missing. Clear this workspace and upload it again.",
       );
+    // Remove active page/annotation entries before copying their object graph.
+    // These are page dictionaries, not resource dictionaries where any name is valid.
+    const original = source.getPage(page.index);
+    original.node.delete(PDFName.of("AA"));
+    original.node.delete(PDFName.of("AF"));
+    const annotations = original.node.Annots();
+    if (annotations)
+      for (let i = annotations.size() - 1; i >= 0; i--) {
+        const annotation = source.context.lookup(annotations.get(i));
+        if (!(annotation instanceof PDFDict)) continue;
+        const subtype = annotation.get(PDFName.of("Subtype"))?.toString();
+        if (
+          ["/FileAttachment", "/RichMedia", "/Movie", "/Sound"].includes(
+            subtype ?? "",
+          )
+        )
+          annotations.remove(i);
+        else {
+          annotation.delete(PDFName.of("A"));
+          annotation.delete(PDFName.of("AA"));
+        }
+      }
     const [copied] = await output.copyPages(source, [page.index]);
     copied.setRotation(
       degrees((copied.getRotation().angle + page.rotation) % 360),
@@ -74,8 +96,34 @@ export async function organizePdfCore(
     progress(index + 1, pages.length);
     await yieldToBrowser();
   }
-  // Preserve visible page content, but do not carry executable actions, attachments
-  // or external submissions into a newly assembled document.
+  // An action field must resolve to an actual action dictionary. Names such as
+  // /A and /AA are also legal font/image resource names and must remain intact.
+  const actionKinds = new Set([
+    "/GoTo",
+    "/GoToR",
+    "/GoToE",
+    "/Launch",
+    "/Thread",
+    "/URI",
+    "/Sound",
+    "/Movie",
+    "/Hide",
+    "/Named",
+    "/SubmitForm",
+    "/ResetForm",
+    "/ImportData",
+    "/JavaScript",
+    "/SetOCGState",
+    "/Rendition",
+    "/Trans",
+    "/GoTo3DView",
+  ]);
+  function isAction(object: unknown): object is PDFDict {
+    return (
+      object instanceof PDFDict &&
+      actionKinds.has(object.get(PDFName.of("S"))?.toString() ?? "")
+    );
+  }
   const pending = output.context
     .enumerateIndirectObjects()
     .map(([, object]) => object);
@@ -85,17 +133,21 @@ export async function organizePdfCore(
     if (visited.has(object)) continue;
     visited.add(object);
     if (object instanceof PDFDict) {
-      for (const key of [
-        "A",
-        "AA",
-        "OpenAction",
-        "JS",
-        "JavaScript",
-        "XFA",
-        "EmbeddedFiles",
-        "AF",
-      ])
-        object.delete(PDFName.of(key));
+      if (isAction(output.context.lookup(object.get(PDFName.of("A")))))
+        object.delete(PDFName.of("A"));
+      const additional = output.context.lookup(object.get(PDFName.of("AA")));
+      if (
+        additional instanceof PDFDict &&
+        additional
+          .values()
+          .some((value) => isAction(output.context.lookup(value)))
+      )
+        object.delete(PDFName.of("AA"));
+      if (
+        isAction(object) &&
+        object.get(PDFName.of("S"))?.toString() === "/JavaScript"
+      )
+        object.delete(PDFName.of("JS"));
       pending.push(...object.values());
     } else if (object instanceof PDFArray) pending.push(...object.asArray());
   }

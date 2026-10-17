@@ -9,7 +9,7 @@ can refer to the final commit without a deployment-SHA self-reference.
 
 - Lint: passes without warnings.
 - Type checking: passes.
-- Unit tests: **82 pass across 10 suites**.
+- Unit tests: **83 pass across 10 suites**.
 - Production build: passes on Next.js 16.4.2 / Node.js 24; all meaningful catalog,
   category and tool pages are statically rendered.
 - Browser suite: **192 pass** across the six profiles below on the production build.
@@ -39,7 +39,7 @@ browser supports it; the image-upload fallback is exercised in every profile.
 | Password Generator | Secure randomness, selected character classes, option/length limits, regeneration, unavailable crypto, copy and clear; values are not logged |
 | Scan to PDF | One and several images; JPEG/PNG/WebP; crop, keyboard corner movement, manual perspective correction, readability, rotate/reorder/delete, actual PDF page count/orientation, bad images, local handoff and object-URL cleanup |
 | PDF Organizer | Several PDFs; previews; actual exported page widths prove ordering/removal; rotation checked in output bytes; corrupt/encrypted/51-page/41-MB inputs rejected; executable PDF actions removed |
-| File Compressor | JPEG/PNG/WebP, all three presets, real downloadable output; a detailed embedded-image PDF becomes a smaller valid PDF; unsupported input and 21/41-MB limits; invalid replacement clears stale output |
+| File Compressor | JPEG/PNG/WebP, all three presets, real downloadable output; all three PDF presets produce smaller valid output from a detailed embedded-image PDF; unsupported input and 21/41-MB limits; invalid replacement clears stale output |
 | Application Photo & Signature Prep | Crop controls; exact dimensions; detailed-image target-KB compression; tight signature bounding box; JPG/PNG; impossible limits and invalid dimensions; custom units and proportional fit implementation reviewed |
 | Invoice & Receipt Maker | Exact kobo arithmetic, quantities, multiple/long line items, discount then configurable tax, NGN formatting, dates, paginated PDF exports, merchant-record disclaimer and share; actual rendered glyphs/naira/Yoruba verified |
 | Percentage calculator | Five jobs; zero division, zero, negative/invalid values, decimal behavior and limits |
@@ -101,6 +101,12 @@ it with official static Inter 4.1 and added `invoice-render.test.ts`, which chec
 visible glyph outlines, not merely valid PDF bytes or extracted text. The exported
 invoice image below was rendered from an actual browser download.
 
+Final PDF review found that removing every dictionary key named `A` or `AA`
+could also remove a valid font/image resource. Action removal now checks the
+dictionary's role; a regression preserves both resource aliases and removes an
+attachment annotation. Connected-workflow browser checks wait for the destination
+route before using its controls. Handoff buttons show navigation progress.
+
 Privacy checks observe requests, console, storage writes and local analytics.
 Working contents/filenames never enter them; only fixed tool/action identifiers
 are emitted. All processing, fonts and PDF workers use local or same-origin
@@ -148,6 +154,16 @@ npm run test:e2e
 For a protected Preview, obtain an authorized temporary review link, initialize a
 browser context through it, and keep its storage state outside the repository.
 Set `PLAYWRIGHT_BASE_URL` and `PLAYWRIGHT_STORAGE_STATE` to run the same suite.
-The optional `PLAYWRIGHT_IGNORE_HTTPS_ERRORS=1` is only for test environments
-whose intercepting proxy CA is not trusted by Chromium; it changes no app setting.
+For an intercepting proxy, `PLAYWRIGHT_PROXY_CA_CERT` may point to its configured
+public CA certificate. Chromium pins that CA’s public key; TLS validation is not
+globally disabled, and the option changes no application setting.
 Never commit/share the temporary review token or browser storage state.
+
+## Remaining supplied-asset dependency
+
+The Founder's later favicon-only JPEG is visible in the conversation, but its
+attachment path under `/tmp/codex-remote-attachments` was lost when the execution
+environment restarted. Opening that path fails and workspace/temporary-file
+searches found no copy. The original supplied lockup remains available and the
+current icon is derived from its mark. Installing the exact replacement requires
+the original attachment or a download link; it must not be approximated or redrawn.

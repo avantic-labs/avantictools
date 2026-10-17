@@ -98,3 +98,51 @@ it("removes embedded executable actions from organized PDFs", async () => {
     (await PDFDocument.load(output)).getPage(0).node.has(PDFName.of("AA")),
   ).toBe(false);
 });
+
+it("preserves valid resource names A and AA while removing attachment annotations", async () => {
+  const {
+    PDFName,
+    StandardFonts,
+    beginText,
+    setFontAndSize,
+    moveText,
+    showText,
+    endText,
+    PDFHexString,
+    PDFDict,
+  } = await import("pdf-lib");
+  const source = await PDFDocument.create();
+  const page = source.addPage();
+  const font = await source.embedFont(StandardFonts.Helvetica);
+  page.node.setFontDictionary(PDFName.of("A"), font.ref);
+  page.node.setFontDictionary(PDFName.of("AA"), font.ref);
+  page.pushOperators(
+    beginText(),
+    setFontAndSize(PDFName.of("A"), 12),
+    moveText(40, 700),
+    showText(PDFHexString.fromText("Visible content")),
+    endText(),
+  );
+  page.node.addAnnot(
+    source.context.register(
+      source.context.obj({
+        Type: "Annot",
+        Subtype: "FileAttachment",
+        FS: { Type: "Filespec", F: "synthetic.txt" },
+      }),
+    ),
+  );
+  const bytes = await organizePdfCore(
+    [{ id: "source", bytes: await source.save(), pageCount: 1 }],
+    [{ sourceId: "source", index: 0, rotation: 0 }],
+    () => {},
+  );
+  const output = await PDFDocument.load(bytes);
+  const result = output.getPage(0);
+  const resources = result.node
+    .Resources()!
+    .lookup(PDFName.of("Font"), PDFDict);
+  expect(resources.has(PDFName.of("A"))).toBe(true);
+  expect(resources.has(PDFName.of("AA"))).toBe(true);
+  expect(result.node.Annots()?.size()).toBe(0);
+});

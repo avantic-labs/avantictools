@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import type { ToolId } from "@/data/tools";
 import { handoffFile } from "@/lib/files/handoff";
 export function ContinueWith({
@@ -12,16 +13,19 @@ export function ContinueWith({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const [pending, startTransition] = useTransition();
   return (
     <button
       type="button"
       className="button button-secondary"
+      disabled={pending}
+      aria-busy={pending}
       onClick={() => {
         handoffFile(target, blob);
-        router.push(`/tools/${target}`);
+        startTransition(() => router.push(`/tools/${target}`));
       }}
     >
-      {children}
+      {pending ? "Opening workspace…" : children}
     </button>
   );
 }

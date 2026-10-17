@@ -187,10 +187,18 @@ test("catalog, search, categories, Coming Soon, metadata and 404 are intentional
   await expect(
     page.getByRole("link", { name: "Browse tools", exact: true }).first(),
   ).toBeVisible();
-  expect(await page.evaluate(async () => (await fetch("/sitemap.xml")).status)).toBe(200);
-  expect(await page.evaluate(async () => (await fetch("/robots.txt")).status)).toBe(200);
-  expect(await page.evaluate(async () => (await fetch("/icon.png")).status)).toBe(200);
-  expect(await page.evaluate(async () => (await fetch("/opengraph-image")).status)).toBe(200);
+  expect(
+    await page.evaluate(async () => (await fetch("/sitemap.xml")).status),
+  ).toBe(200);
+  expect(
+    await page.evaluate(async () => (await fetch("/robots.txt")).status),
+  ).toBe(200);
+  expect(
+    await page.evaluate(async () => (await fetch("/icon.png")).status),
+  ).toBe(200);
+  expect(
+    await page.evaluate(async () => (await fetch("/opengraph-image")).status),
+  ).toBe(200);
 });
 
 test("scan prepares one image then multiple pages, crops, corrects corners, rotates, reorders, removes and exports", async ({
@@ -250,6 +258,10 @@ test("scan prepares one image then multiple pages, crops, corrects corners, rota
   );
   await accessible(page);
   await page.getByRole("button", { name: "Organize this PDF" }).click();
+  await expect(page).toHaveURL(/\/tools\/pdf-organizer$/);
+  await expect(
+    page.getByRole("heading", { name: "PDF Organizer", level: 1 }),
+  ).toBeVisible();
   await expect(page.locator(".page-tile")).toHaveCount(2);
   await page.getByRole("button", { name: "Create PDF", exact: true }).click();
   await expect(
@@ -258,6 +270,10 @@ test("scan prepares one image then multiple pages, crops, corrects corners, rota
   await page
     .getByRole("button", { name: "Compress this PDF", exact: true })
     .click();
+  await expect(page).toHaveURL(/\/tools\/file-compressor$/);
+  await expect(
+    page.getByRole("heading", { name: "File Compressor", level: 1 }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Compress", exact: true }),
   ).toBeVisible();
@@ -381,13 +397,16 @@ test("PDF compression produces a smaller usable document and rejects unsupported
     mimeType: "application/pdf",
     buffer: input,
   });
-  await page.getByRole("button", { name: "Compress", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Ready to download" }),
-  ).toBeVisible({ timeout: 30000 });
-  const output = await download(page);
-  expect(output.length).toBeLessThan(input.length);
-  expect((await PDFDocument.load(output)).getPageCount()).toBe(1);
+  for (const preset of ["smallest", "balanced", "best"]) {
+    await page.getByLabel("Compression", { exact: true }).selectOption(preset);
+    await page.getByRole("button", { name: "Compress", exact: true }).click();
+    await expect(
+      page.getByRole("heading", { name: "Ready to download" }),
+    ).toBeVisible({ timeout: 30000 });
+    const output = await download(page);
+    expect(output.length).toBeLessThan(input.length);
+    expect((await PDFDocument.load(output)).getPageCount()).toBe(1);
+  }
   await page.getByLabel("Upload a file", { exact: true }).setInputFiles({
     name: "unsafe.svg",
     mimeType: "image/svg+xml",
