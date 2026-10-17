@@ -7,9 +7,10 @@ export default defineConfig({
   fullyParallel: true,
   workers: 2,
   retries: 0,
+  preserveOutput: "never",
   reporter: [["list"]],
   // Do not persist input, passwords or clipboard contents in traces/videos/screenshots.
-  use: { baseURL, trace: "off", screenshot: "off", video: "off" },
+  use: { baseURL, storageState: process.env.PLAYWRIGHT_STORAGE_STATE, ignoreHTTPSErrors: process.env.PLAYWRIGHT_IGNORE_HTTPS_ERRORS === "1", trace: "off", screenshot: "off", video: "off" },
   projects: [
     { name: "small-mobile", use: { ...devices["Pixel 7"], viewport: { width: 320, height: 740 } } },
     { name: "tablet", use: { ...devices["Desktop Chrome"], viewport: { width: 768, height: 1024 } } },

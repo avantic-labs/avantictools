@@ -156,7 +156,6 @@ async function accessible(page: Page) {
 
 test("catalog, search, categories, Coming Soon, metadata and 404 are intentional", async ({
   page,
-  request,
 }) => {
   await page.goto("/");
   await expect(page.locator(".catalog-card")).toHaveCount(12);
@@ -188,10 +187,10 @@ test("catalog, search, categories, Coming Soon, metadata and 404 are intentional
   await expect(
     page.getByRole("link", { name: "Browse tools", exact: true }).first(),
   ).toBeVisible();
-  expect((await request.get("/sitemap.xml")).status()).toBe(200);
-  expect((await request.get("/robots.txt")).status()).toBe(200);
-  expect((await request.get("/icon.png")).status()).toBe(200);
-  expect((await request.get("/opengraph-image")).status()).toBe(200);
+  expect(await page.evaluate(async () => (await fetch("/sitemap.xml")).status)).toBe(200);
+  expect(await page.evaluate(async () => (await fetch("/robots.txt")).status)).toBe(200);
+  expect(await page.evaluate(async () => (await fetch("/icon.png")).status)).toBe(200);
+  expect(await page.evaluate(async () => (await fetch("/opengraph-image")).status)).toBe(200);
 });
 
 test("scan prepares one image then multiple pages, crops, corrects corners, rotates, reorders, removes and exports", async ({
