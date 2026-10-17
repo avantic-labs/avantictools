@@ -7,10 +7,10 @@ export default function HomePage() {
   return (
     <main className="site-shell">
       <header className="topbar">
-        <Link href="/" className="brand" aria-label="AVANTIC Tools home">
-          <span className="brand-mark">A</span>
+        <Link href="/" className="brand">
+          <span className="brand-mark" aria-hidden="true">A</span>
           <span>
-            <strong>AVANTIC</strong>
+            <strong>AVANTIC</strong>{" "}
             <small>TOOLS</small>
           </span>
         </Link>
@@ -43,7 +43,7 @@ export default function HomePage() {
                 <h3>{tool.name}</h3>
                 <p>{tool.description}</p>
               </div>
-              <Link href={tool.route} className="card-link">
+              <Link href={tool.route} prefetch={false} className="card-link">
                 Open workflow <span aria-hidden="true">→</span>
               </Link>
             </article>
@@ -74,7 +74,7 @@ export default function HomePage() {
                     <h3>{tool.name}</h3>
                     <p>{tool.description}</p>
                   </div>
-                  <Link href={tool.route} className="card-link">
+                  <Link href={tool.route} prefetch={false} className="card-link">
                     Open tool <span aria-hidden="true">→</span>
                   </Link>
                 </article>
