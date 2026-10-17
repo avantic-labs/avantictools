@@ -39,6 +39,9 @@ and the canonical product artwork in `Screenshot_20260615-205712.jpg`. The origi
 art is preserved at `public/avantic-tools-logo.jpg`; identity derivatives must retain
 the supplied geometry/colors and may only crop surrounding whitespace or resize.
 
+The separately supplied favicon artwork is preserved unchanged at
+`assets/brand/avantic-tools-icon.jpg` and is the source for favicon/app icons.
+
 ## Branch
 
 `ai/productization-files` starts from tested Day-1 commit

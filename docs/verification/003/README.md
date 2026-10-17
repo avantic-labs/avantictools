@@ -162,11 +162,13 @@ public CA certificate. Chromium pins that CA’s public key; TLS validation is n
 globally disabled, and the option changes no application setting.
 Never commit/share the temporary review token or browser storage state.
 
-## Remaining supplied-asset dependency
+## Approved favicon artwork
 
-The Founder's later favicon-only JPEG is visible in the conversation, but its
-attachment path under `/tmp/codex-remote-attachments` was lost when the execution
-environment restarted. Opening that path fails and workspace/temporary-file
-searches found no copy. The original supplied lockup remains available and the
-current icon is derived from its mark. Installing the exact replacement requires
-the original attachment or a download link; it must not be approximated or redrawn.
+The Founder reattached the exact favicon-only JPEG. Its original bytes are preserved
+at `assets/brand/avantic-tools-icon.jpg`. The asset preparation script crops only
+surrounding whitespace and proportionally creates the 32px favicon, 180px Apple
+icon and 512px app icon. The supplied colors and geometry are preserved.
+Navigation and social artwork continue to use the approved product lockup.
+
+The preserved source matches the uploaded JPEG byte-for-byte (SHA-256
+`185e2152493d22051fe51707bf21e38ad44730faa4fea3b0d450632faead10b6`).

@@ -43,11 +43,17 @@ const mark = await sharp(original)
 await sharp(mark)
   .resize(256, 256)
   .toFile(path.join(root, "public/avantic-tools-mark.png"));
-await sharp(mark).resize(512, 512).toFile(path.join(root, "app/icon.png"));
-await sharp(mark)
+// The Founder supplied separate icon artwork. Preserve its pixels and proportions;
+// remove only the surrounding whitespace before generating standard icon sizes.
+const iconArtwork = await sharp(path.join(root, "assets/brand/avantic-tools-icon.jpg"))
+  .extract({ left: 128, top: 128, width: 1024, height: 1024 })
+  .png()
+  .toBuffer();
+await sharp(iconArtwork).resize(512, 512).toFile(path.join(root, "app/icon.png"));
+await sharp(iconArtwork)
   .resize(180, 180)
   .toFile(path.join(root, "app/apple-icon.png"));
-const icon = await sharp(mark).resize(32, 32).ensureAlpha().png().toBuffer();
+const icon = await sharp(iconArtwork).resize(32, 32).ensureAlpha().png().toBuffer();
 const header = Buffer.alloc(22);
 header.writeUInt16LE(1, 2);
 header.writeUInt16LE(1, 4);
