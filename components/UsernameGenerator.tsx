@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   futuristicStyles,
   randomSymbols,
@@ -12,8 +12,8 @@ export default function UsernameGenerator() {
   const [results, setResults] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  const generatedUsernames = useMemo(() => {
-    return Array.from({ length: 10 }).map(() => {
+  const generate = () => {
+    const generatedUsernames = Array.from({ length: 10 }).map(() => {
       const style =
         futuristicStyles[
           Math.floor(Math.random() * futuristicStyles.length)
@@ -29,9 +29,6 @@ export default function UsernameGenerator() {
         `${baseName || "AVANTIC"} ${trend}`
       )}${symbol}`;
     });
-  }, [baseName]);
-
-  const generate = () => {
     setResults(generatedUsernames);
   };
 
