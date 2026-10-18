@@ -1,6 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
-# Next.js repository rule
-This project runs a current Next.js release. Before using framework APIs that may have changed, read the relevant guide under `node_modules/next/dist/docs/` and heed deprecation notices.
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # AVANTIC Tools — AI Worker Operating Rules
@@ -15,7 +20,47 @@ This repository is the production codebase for AVANTIC Tools. AI coding agents m
 
 If existing prototype code conflicts with approved Day-1 scope, the approved documents win.
 
-## Product scope: Day 1 only
+## Current work order: 005 production evidence
+
+Work Order 005 freezes subjective redesign and feature expansion. Preserve the
+twelve verified workflows and visual system. Launch, measure, observe, form a
+hypothesis, then make the smallest evidence-supported change. See
+`docs/WORK_ORDER_005.md` and `docs/EVIDENCE_BACKLOG.md`. Production remains
+`https://avantictools.vercel.app`; do not activate custom DNS or modify/delete
+the duplicate Vercel project.
+
+All analytics must cross the typed runtime allowlist in `lib/analytics`. Use
+explicit product events only. Never add autocapture, session replay, heatmaps,
+fingerprinting, persistent user profiles or advertising identifiers. Never send
+raw search phrases, entered text, file contents or names, passwords, QR payloads,
+photos, signatures, personal dates, invoice/customer/payment details, raw errors
+or stack traces. Traffic attribution accepts only the documented campaign enums.
+PostHog is isolated behind the adapter; provider calls do not belong in product
+components.
+
+## Work Order 003 Founder amendment
+
+The Founder’s Work Order 003 explicitly supersedes the historical Day-1 scope
+and information architecture below. Current authority is: the Founder’s goal,
+Master Design System v1.2, product PRD, these repository rules, tested Day-1 code,
+then engineering judgment. See `docs/WORK_ORDER_003.md` for sources and decisions.
+
+Ship exactly twelve usable workflows in `data/tools.ts`: the five deterministic
+utilities and Scan to PDF, PDF Organizer, File Compressor, Application Photo &
+Signature Prep, Invoice & Receipt Maker, Percentage & Discount Calculator, and
+Age & Date Calculator. Use the five problem-oriented categories in that registry.
+Do not build JSON/Base64/UUID, Developer Tools expansion, AI products, auth or AVA.
+Preserve internal research without exposing unfinished tools in the catalog.
+
+Process files, images, invoices and dates locally. Never log, store or transmit
+user content or filenames through analytics or network requests. Only fixed
+allowlisted tool/action events are permitted. Share/download require an explicit
+user action. Keep heavy file libraries lazy and release temporary resources.
+Use the supplied canonical logo, charcoal, blue-gray accent and warm off-white.
+Receipts are merchant-entered records, never independently verified payment proof.
+
+## Historical Day-1 scope (amended by Work Order 003)
+
 Ship exactly these seven Day-1 surfaces:
 - AI Detector + Humanizer connected workflow.
 - AI Readiness Audit.
@@ -69,21 +114,10 @@ Current product-runtime provider decision:
 
 This runtime provider choice is separate from the coding agent used to build the repository.
 
-## Required analytics events
-Use one consistent schema. Day-1 event vocabulary includes:
-- `tool_viewed`
-- `tool_completed`
-- `workflow_step_completed`
-- `workflow_completed`
-- `audit_submitted`
-- `audit_abandoned`
-- `cta_clicked`
-- `artifact_shared`
-- `search_query`
-- `cross_tool_navigation`
-- `ai_cost`
-
-Every AI gateway call must emit `ai_cost` with provider, usage/cost units, and workflow.
+## Analytics event authority
+The Work Order 005 event dictionary in `docs/WORK_ORDER_005.md` supersedes the
+historical Day-1 list. Event names and properties are closed runtime allowlists.
+Do not introduce an arbitrary property bag or a raw `search_query` event.
 
 ## API boundaries
 Planned routes:
