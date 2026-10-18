@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/inter/700.css";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/product/SiteChrome";
 import { SITE_URL, ALLOW_INDEXING } from "@/lib/site";
 
-// Preload the three UI weights; retain Unicode-range Inter fallbacks for user text.
+// Preload UI weights; other glyphs use the device font without network requests.
 const interfaceFont = localFont({
   src: [
     {
