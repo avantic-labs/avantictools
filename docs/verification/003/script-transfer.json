@@ -1,0 +1,26 @@
+[
+  {
+    "route": "/",
+    "scriptCount": 8,
+    "scriptTransferBytes": 142914,
+    "loadsPdfWorker": false
+  },
+  {
+    "route": "/tools/word-counter",
+    "scriptCount": 9,
+    "scriptTransferBytes": 155615,
+    "loadsPdfWorker": false
+  },
+  {
+    "route": "/tools/percentage-discount-calculator",
+    "scriptCount": 10,
+    "scriptTransferBytes": 157446,
+    "loadsPdfWorker": false
+  },
+  {
+    "route": "/tools/pdf-organizer",
+    "scriptCount": 11,
+    "scriptTransferBytes": 339446,
+    "loadsPdfWorker": false
+  }
+]

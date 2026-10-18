@@ -15,7 +15,29 @@ This repository is the production codebase for AVANTIC Tools. AI coding agents m
 
 If existing prototype code conflicts with approved Day-1 scope, the approved documents win.
 
-## Product scope: Day 1 only
+## Current work order: 003 Founder amendment
+
+The Founder’s Work Order 003 explicitly supersedes the historical Day-1 scope
+and information architecture below. Current authority is: the Founder’s goal,
+Master Design System v1.2, product PRD, these repository rules, tested Day-1 code,
+then engineering judgment. See `docs/WORK_ORDER_003.md` for sources and decisions.
+
+Ship exactly twelve usable workflows in `data/tools.ts`: the five deterministic
+utilities and Scan to PDF, PDF Organizer, File Compressor, Application Photo &
+Signature Prep, Invoice & Receipt Maker, Percentage & Discount Calculator, and
+Age & Date Calculator. Use the five problem-oriented categories in that registry.
+Do not build JSON/Base64/UUID, Developer Tools expansion, AI products, auth or AVA.
+Preserve internal research without exposing unfinished tools in the catalog.
+
+Process files, images, invoices and dates locally. Never log, store or transmit
+user content or filenames through analytics or network requests. Only fixed
+allowlisted tool/action events are permitted. Share/download require an explicit
+user action. Keep heavy file libraries lazy and release temporary resources.
+Use the supplied canonical logo, charcoal, blue-gray accent and warm off-white.
+Receipts are merchant-entered records, never independently verified payment proof.
+
+## Historical Day-1 scope (amended by Work Order 003)
+
 Ship exactly these seven Day-1 surfaces:
 - AI Detector + Humanizer connected workflow.
 - AI Readiness Audit.

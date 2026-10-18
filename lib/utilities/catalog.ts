@@ -1,18 +1,12 @@
-import { liveDay1Tools } from "@/data/day1-tools";
+import { tools, type ToolId } from "@/data/tools";
 
-export const utilityIds = [
-  "word-counter",
-  "character-counter",
-  "case-converter",
-  "qr-code-generator",
-  "password-generator",
-] as const;
+export const utilityIds = tools.map((tool) => tool.slug);
 
-export type UtilityId = (typeof utilityIds)[number];
+export type UtilityId = ToolId;
 
 export function isUtilityId(value: string): value is UtilityId {
   return utilityIds.some((id) => id === value);
 }
 
-// Names, descriptions and URLs continue to come from the canonical Day-1 registry.
-export const utilityTools = liveDay1Tools.filter((tool) => isUtilityId(tool.slug));
+// Work Order 003 amends the catalog while keeping all five existing URLs stable.
+export const utilityTools = tools.map((tool) => ({ ...tool, route: `/tools/${tool.slug}` }));

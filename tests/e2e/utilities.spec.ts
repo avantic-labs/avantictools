@@ -135,13 +135,13 @@ async function verifyCopiedValue(page: Page, outputId: string) {
   ).toBe(true);
 }
 
-test("all five utility routes are reachable from the Day-1 catalog", async ({ page }) => {
+test("all five existing utilities remain reachable from the product catalog", async ({ page }) => {
   for (const tool of tools) {
     await page.goto("/");
     const card = page.getByRole("article").filter({
       has: page.getByRole("heading", { name: tool.name, exact: true }),
     });
-    await card.getByRole("link", { name: "Open tool" }).click();
+    await card.getByRole("link", { name: tool.name, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/tools/${tool.slug}$`));
     await expect(page.getByRole("heading", { name: tool.name, level: 1, exact: true })).toBeVisible();
     await assertNoOverflow(page);
@@ -221,7 +221,7 @@ test("case conversion preserves input, supports all modes, copy and an accessibl
 test("case conversion and copy work using only the keyboard", async ({ page }) => {
   await openTool(page, "case-converter");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Skip to tool" })).toBeFocused();
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
   await page.keyboard.press("Tab");
   await expect(page.getByLabel("Your text", { exact: true })).toBeFocused();

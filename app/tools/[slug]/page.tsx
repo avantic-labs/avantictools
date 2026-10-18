@@ -1,63 +1,120 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { utilityTools, isUtilityId } from "@/lib/utilities/catalog";
-import { TextCounter } from "@/components/utilities/TextCounter";
-import { CaseConverter } from "@/components/utilities/CaseConverter";
-import { PasswordGenerator } from "@/components/utilities/PasswordGenerator";
-import { QrCodeGenerator } from "@/components/utilities/QrCodeGenerator";
+import { tools, getTool, categories } from "@/data/tools";
+import { ToolWorkspace } from "@/components/workspaces/ToolWorkspace";
 import { UtilityView } from "@/components/utilities/UtilityView";
-
-type PageProps = { params: Promise<{ slug: string }> };
-
+import { SITE_URL } from "@/lib/site";
+type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
-  return utilityTools.map(({ slug }) => ({ slug }));
+  return tools.map(({ slug }) => ({ slug }));
 }
-
 export const dynamicParams = false;
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const tool = utilityTools.find((candidate) => candidate.slug === slug);
-  return tool ? { title: tool.name, description: tool.description } : {};
+  const tool = getTool(slug);
+  return tool
+    ? {
+        title: tool.name,
+        description: `${tool.description} Free, private and on your device. A product of AVANTIC LABS.`,
+        alternates: { canonical: `/tools/${slug}` },
+        openGraph: {
+          title: tool.name,
+          description: tool.description,
+          url: `/tools/${slug}`,
+        },
+        twitter: { title: tool.name, description: tool.description },
+      }
+    : {};
 }
-
-export default async function UtilityPage({ params }: PageProps) {
+export default async function UtilityPage({ params }: Props) {
   const { slug } = await params;
-  const tool = utilityTools.find((candidate) => candidate.slug === slug);
-  if (!tool || !isUtilityId(slug)) notFound();
-
+  const tool = getTool(slug);
+  if (!tool) notFound();
+  const category = categories.find(
+    (category) => category.id === tool.category,
+  )!;
+  const related = tools
+    .filter(
+      (candidate) =>
+        candidate.family === tool.family && candidate.slug !== slug,
+    )
+    .slice(0, 3);
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: tool.name,
+    description: tool.description,
+    url: `${SITE_URL}/tools/${slug}`,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any modern web browser",
+    browserRequirements: "Requires JavaScript",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
+    publisher: { "@type": "Organization", name: "AVANTIC LABS" },
+  };
   return (
-    <div className="site-shell">
-      <a className="skip-link" href="#utility">Skip to tool</a>
-      <header className="topbar">
-        <Link href="/" prefetch={false} className="brand">
-          <span className="brand-mark" aria-hidden="true">A</span>
-          <span><strong>AVANTIC</strong>{" "}<small>TOOLS</small></span>
-        </Link>
-        <Link href="/" prefetch={false}>All tools</Link>
-      </header>
-      <main id="utility" className="utility-shell">
-        <header className="utility-heading">
-          <p className="eyebrow">Productivity &amp; Utility Tools</p>
-          <h1>{tool.name}</h1>
-          <p>{tool.description}</p>
-          <p className="utility-hint">Your input stays in this browser. No sign-in or upload.</p>
-        </header>
-        <UtilityView tool={slug} />
-        {slug === "word-counter" && <TextCounter mode="word" />}
-        {slug === "character-counter" && <TextCounter mode="character" />}
-        {slug === "case-converter" && <CaseConverter />}
-        {slug === "qr-code-generator" && <QrCodeGenerator />}
-        {slug === "password-generator" && <PasswordGenerator />}
-        <noscript><p>Enable JavaScript to use this browser-only tool.</p></noscript>
-        <nav className="utility-navigation" aria-label="More utilities">
-          <h2>More utilities</h2>
-          <ul>{utilityTools.filter((candidate) => candidate.slug !== slug).map((candidate) => (
-            <li key={candidate.slug}><Link href={candidate.route} prefetch={false}>{candidate.name}</Link></li>
-          ))}</ul>
+    <main
+      id="main"
+      className={`utility-shell${tool.family === "files" || tool.family === "images" ? " document-workspace" : ""}`}
+    >
+      {tool.family === "files" && (
+        <nav className="workflow-family" aria-label="AVANTIC Files">
+          <span className="family-name">AVANTIC Files</span>
+          {tools
+            .filter((item) => item.family === "files")
+            .map((item) => (
+              <Link
+                key={item.slug}
+                href={`/tools/${item.slug}`}
+                prefetch={false}
+                aria-current={item.slug === slug ? "page" : undefined}
+              >
+                {item.name}
+              </Link>
+            ))}
         </nav>
-      </main>
-    </div>
+      )}
+      <header className="utility-heading">
+        <h1>{tool.name}</h1>
+        <p>{tool.description}</p>
+        <p className="hint">
+          {["files", "images", "business"].includes(tool.family)
+            ? "Your files and details stay on this device."
+            : "Works in your browser. Your input stays here."}
+        </p>
+      </header>
+      <UtilityView tool={tool.slug} />
+      <ToolWorkspace tool={tool.slug} />
+      <noscript>
+        <p>Enable JavaScript to use this local workspace.</p>
+      </noscript>
+      <nav className="utility-navigation" aria-label="Related tools">
+        <h2>
+          {tool.family === "files"
+            ? "Continue with AVANTIC Files"
+            : `More in ${category.name}`}
+        </h2>
+        <ul>
+          {related.map((item) => (
+            <li key={item.slug}>
+              <Link href={`/tools/${item.slug}`} prefetch={false}>
+                {item.name}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <Link href={`/categories/${category.id}`} prefetch={false}>
+              Browse {category.name}
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
+    </main>
   );
 }
