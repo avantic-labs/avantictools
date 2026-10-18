@@ -1,13 +1,35 @@
 import type { Metadata } from "next";
-import "@fontsource/inter/latin-400.css";
-import "@fontsource/inter/latin-600.css";
-import "@fontsource/inter/latin-700.css";
-import "@fontsource/inter/latin-ext-400.css";
-import "@fontsource/inter/latin-ext-600.css";
-import "@fontsource/inter/latin-ext-700.css";
+import localFont from "next/font/local";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/product/SiteChrome";
 import { SITE_URL, ALLOW_INDEXING } from "@/lib/site";
+
+// Preload the three UI weights; retain Unicode-range Inter fallbacks for user text.
+const interfaceFont = localFont({
+  src: [
+    {
+      path: "../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-avantic",
+  display: "swap",
+  adjustFontFallback: false,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -52,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={interfaceFont.variable}>
       <body>
         <SiteHeader />
         {children}

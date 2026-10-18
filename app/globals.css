@@ -64,7 +64,8 @@ body {
   color: var(--mark);
   background: var(--canvas);
   font:
-    var(--text-body) / 1.5 "Inter",
+    var(--text-body) / 1.5 var(--font-avantic),
+    "Inter",
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
