@@ -1639,21 +1639,25 @@ body:has(dialog[open]) {
   min-height: calc(100svh - var(--space-8) * 5);
 }
 
-/* A focused homepage composition. The moving field is decorative and never
-   covers search or a tool control. */
+/* Ambient hero motion occupies no layout space and never intercepts controls. */
 .catalog-shell .product-intro {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
   max-width: none;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-5);
+  display: block;
   padding-block: var(--space-6) var(--space-5);
 }
 .intro-copy {
+  position: relative;
+  z-index: 1;
   display: grid;
   align-content: center;
   gap: var(--space-4);
   max-width: 680px;
 }
 .catalog-shell .product-intro h1 {
+  width: fit-content;
   font-size: clamp(2.75rem, 9vw, 5.5rem);
   font-weight: 600;
   line-height: 1.06;
@@ -1665,12 +1669,10 @@ body:has(dialog[open]) {
   line-height: 1.55;
 }
 .hero-motion {
-  position: relative;
-  height: 112px;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--mark);
-  isolation: isolate;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 .hero-motion canvas {
   display: block;
@@ -1703,21 +1705,12 @@ body:has(dialog[open]) {
 }
 @media (min-width: 768px) {
   .catalog-shell .product-intro {
-    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-    align-items: center;
-    gap: var(--space-8);
     padding-block: var(--space-8) var(--space-5);
-  }
-  .hero-motion {
-    height: 268px;
   }
 }
 @media (max-width: 359px) {
   .catalog-shell .product-intro h1 {
     font-size: 2.5rem;
-  }
-  .hero-motion {
-    height: 92px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

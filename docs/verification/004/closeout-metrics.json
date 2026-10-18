@@ -1,0 +1,102 @@
+{
+  "context": "Work Order 004 closeout; local production Turbopack build; deployment-specific SHA and hosted results recorded in PR #6.",
+  "units": {
+    "passed": 83
+  },
+  "playwright": {
+    "passed": 288,
+    "profiles": [
+      320,
+      360,
+      390,
+      412,
+      768,
+      1024,
+      1280,
+      1920
+    ],
+    "includesAccessibilityAndPrivacy": true
+  },
+  "bundles": [
+    {
+      "path": "/",
+      "gzipBytes": 147501,
+      "scriptCount": 9,
+      "pdfRuntime": false,
+      "invoiceRuntime": false,
+      "unexpected": 0,
+      "errors": 0
+    },
+    {
+      "path": "/tools/word-counter",
+      "gzipBytes": 148676,
+      "scriptCount": 9,
+      "pdfRuntime": false,
+      "invoiceRuntime": false,
+      "unexpected": 0,
+      "errors": 0
+    },
+    {
+      "path": "/tools/age-date-calculator",
+      "gzipBytes": 150683,
+      "scriptCount": 10,
+      "pdfRuntime": false,
+      "invoiceRuntime": false,
+      "unexpected": 0,
+      "errors": 0
+    },
+    {
+      "path": "/tools/qr-code-generator",
+      "gzipBytes": 158905,
+      "scriptCount": 10,
+      "pdfRuntime": false,
+      "invoiceRuntime": false,
+      "unexpected": 0,
+      "errors": 0
+    },
+    {
+      "path": "/tools/pdf-organizer",
+      "gzipBytes": 158603,
+      "scriptCount": 10,
+      "pdfRuntime": false,
+      "invoiceRuntime": false,
+      "unexpected": 0,
+      "errors": 0
+    },
+    {
+      "path": "/tools/invoice-receipt-maker",
+      "gzipBytes": 159479,
+      "scriptCount": 11,
+      "pdfRuntime": false,
+      "invoiceRuntime": false,
+      "unexpected": 0,
+      "errors": 0
+    }
+  ],
+  "lighthouse": {
+    "profile": "standard simulated mobile",
+    "scores": {
+      "performance": 0.96,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "metrics": {
+      "largest-contentful-paint": 2749.352,
+      "cumulative-layout-shift": 0,
+      "total-blocking-time": 31.5,
+      "speed-index": 757.568
+    }
+  },
+  "productionDependencyVulnerabilities": 0,
+  "publicSourceMaps": 0,
+  "ci": {
+    "githubActionsWorkflows": 0,
+    "automatedChecks": "Vercel builds only; lint/unit/E2E evidence is manually run."
+  },
+  "installPolicy": {
+    "package": "unrs-resolver@1.11.1",
+    "scriptAllowed": false,
+    "isolatedCleanInstallAndResolutionPassed": true
+  }
+}

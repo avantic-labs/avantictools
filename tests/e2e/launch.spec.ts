@@ -13,7 +13,21 @@ test("homepage motion supports reduced motion without interrupting discovery", a
   });
   const canvas = page.locator(".hero-motion canvas");
   await expect(canvas).toBeVisible();
-  await expect(page.getByRole("searchbox")).toBeVisible();
+  const search = page.getByRole("searchbox");
+  await expect(search).toBeVisible();
+  expect((await search.boundingBox())!.y).toBeLessThan(
+    page.viewportSize()!.width < 768 ? 400 : 500,
+  );
+  await expect(page.locator(".hero-motion")).toHaveCSS("pointer-events", "none");
+  await expect(page.locator(".hero-motion")).toHaveCSS(
+    "background-color",
+    "rgba(0, 0, 0, 0)",
+  );
+  const searchReceivesPointer = await search.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return document.elementFromPoint(rect.x + 8, rect.y + 8) === element;
+  });
+  expect(searchReceivesPointer).toBe(true);
   const first = await canvas.evaluate((element: HTMLCanvasElement) =>
     element.toDataURL(),
   );
@@ -24,6 +38,16 @@ test("homepage motion supports reduced motion without interrupting discovery", a
   expect(second).not.toBe(first);
   expect(externalRequests).toEqual([]);
 
+  await page.locator("#tools").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(150);
+  const offscreenFrame = await canvas.evaluate((element: HTMLCanvasElement) =>
+    element.toDataURL(),
+  );
+  await page.waitForTimeout(500);
+  expect(
+    await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL()),
+  ).toBe(offscreenFrame);
+  await canvas.scrollIntoViewIfNeeded();
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForTimeout(100);
   const staticFrame = await canvas.evaluate((element: HTMLCanvasElement) =>

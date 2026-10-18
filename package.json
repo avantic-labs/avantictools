@@ -2,6 +2,9 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
+  "allowScripts": {
+    "unrs-resolver@1.11.1": false
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
