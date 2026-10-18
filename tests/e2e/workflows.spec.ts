@@ -70,7 +70,21 @@ test.afterEach(async ({ page }, info) => {
   const result = await page.evaluate(() => window.workflowAudit);
   expect(result.writes).toBe(0);
   for (const event of result.events) {
-    expect(["page_view", "tool_viewed", "tool_started", "tool_completed", "tool_error", "download_completed", "share_started", "workflow_handoff"]).toContain(event.name);
+    expect([
+      "page_view",
+      "tool_viewed",
+      "tool_started",
+      "tool_completed",
+      "tool_error",
+      "search_opened",
+      "search_used",
+      "search_result_selected",
+      "popular_action_selected",
+      "category_selected",
+      "download_completed",
+      "share_started",
+      "workflow_handoff",
+    ]).toContain(event.name);
     expect(JSON.stringify(event)).not.toMatch(/Synthetic|long-name-|customer|filename/);
     if (event.properties.tool_id)
       expect(/^[a-z-]+$/.test(String(event.properties.tool_id))).toBe(true);
