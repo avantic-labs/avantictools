@@ -42,6 +42,8 @@ Found and repaired a hidden category label causing page overflow, an unfocusable
 
 The closeout hosted review caught Next.js's automatic 404 Open Graph image using a Preview hostname. The 404 now uses explicit production-origin social metadata, keeps noindex and omits a canonical for the missing URL. The browser regression checks both Open Graph and Twitter image origins.
 
+Computed-style review also found Tailwind's default placeholder using 50% charcoal over white. Input/textarea placeholders now use the existing opaque neutral-600 text token, preserving the palette while improving readable hint contrast.
+
 ### Content
 
 Reviewed homepage, registry descriptions, all tool controls/statuses, navigation, search, footer, 404, About, Privacy, Terms and metadata. Removed “Work from start to finish” and vague category prose. Error copy keeps actionable file-size/format guidance and never exposes input or stack traces. Native camera limitations are described with upload as the fallback. The existing receipt disclaimer remains explicit about merchant-entered records and no payment verification.

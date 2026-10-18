@@ -80,6 +80,11 @@ textarea,
 select {
   font: inherit;
 }
+input::placeholder,
+textarea::placeholder {
+  color: var(--neutral-600);
+  opacity: 1;
+}
 button,
 a,
 input,
