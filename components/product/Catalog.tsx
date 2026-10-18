@@ -42,7 +42,7 @@ export function Catalog({
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Try ‘photo size’, ‘PDF’ or ‘discount’"
+            placeholder="PDF, photo, discount"
             autoComplete="off"
             aria-controls="tools"
             onKeyDown={(event) => {
