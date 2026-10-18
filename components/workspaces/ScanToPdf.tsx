@@ -1,4 +1,6 @@
 "use client";
+import { usePageReflow } from "@/lib/use-page-reflow";
+import { useCompactLayout } from "@/lib/use-compact-layout";
 import { useState } from "react";
 import { ArrowUp, ArrowDown, RotateCw, Trash2 } from "lucide-react";
 import {
@@ -22,8 +24,10 @@ import { ContinueWith } from "./ContinueWith";
 type Page = { id: string; file: File; preview: Blob; settings: ImageSettings };
 
 export function ScanToPdf() {
+  const compact = useCompactLayout();
   const [pages, setPages] = useState<Page[]>([]);
   const [selected, setSelected] = useState("");
+  const pageGrid = usePageReflow(pages.map((page) => page.id).join(","));
   const [result, setResult] = useState<Blob | null>(null);
   const task = useLocalTask();
   const current = pages.find((page) => page.id === selected) ?? pages[0];
@@ -82,22 +86,28 @@ export function ScanToPdf() {
       trackUtilityEvent("scan-to-pdf", "tool_completed", "process");
     }
   }
+  const cameraUpload = (
+    <Upload
+      label="Take a photo"
+      accept="image/jpeg,image/png,image/webp"
+      camera
+      busy={task.busy}
+      onFiles={add}
+    />
+  );
   return (
     <div className="workspace-panel">
-      <Upload
-        label={pages.length ? "Add pages" : "Upload photos"}
-        accept="image/jpeg,image/png,image/webp"
-        multiple
-        busy={task.busy}
-        onFiles={add}
-      />
-      <Upload
-        label="Take a photo"
-        accept="image/jpeg,image/png,image/webp"
-        camera
-        busy={task.busy}
-        onFiles={add}
-      />
+      <div className="capture-options">
+        {compact && cameraUpload}
+        <Upload
+          label={pages.length ? "Add pages" : "Upload photos"}
+          accept="image/jpeg,image/png,image/webp"
+          multiple
+          busy={task.busy}
+          onFiles={add}
+        />
+        {!compact && cameraUpload}
+      </div>
       <p className="hint">
         JPEG, PNG or WebP. Up to 50 pages, 20 MB per photo and 80 MB per batch.
       </p>
@@ -118,9 +128,9 @@ export function ScanToPdf() {
             disabled={task.busy}
             onChange={(settings) => update(current.id, settings)}
           />
-          <ol className="page-grid" aria-label="Scanned pages">
+          <ol ref={pageGrid} className="page-grid" aria-label="Scanned pages">
             {pages.map((page, index) => (
-              <li className="page-tile" key={page.id}>
+              <li className="page-tile" data-page-id={page.id} key={page.id}>
                 <div className="page-thumbnail">
                   <LocalImage
                     blob={page.preview}

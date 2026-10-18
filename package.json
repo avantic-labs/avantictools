@@ -12,7 +12,8 @@
     "test:e2e": "playwright test",
     "postinstall": "node scripts/prepare-assets.mjs",
     "prebuild": "node scripts/prepare-assets.mjs",
-    "predev": "node scripts/prepare-assets.mjs"
+    "predev": "node scripts/prepare-assets.mjs",
+    "postbuild": "node scripts/check-production-assets.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

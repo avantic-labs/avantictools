@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tools, getTool, categories } from "@/data/tools";
@@ -14,17 +15,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tool = getTool(slug);
   return tool
-    ? {
-        title: tool.name,
-        description: `${tool.description} Free, private and on your device. A product of AVANTIC LABS.`,
-        alternates: { canonical: `/tools/${slug}` },
-        openGraph: {
-          title: tool.name,
-          description: tool.description,
-          url: `/tools/${slug}`,
-        },
-        twitter: { title: tool.name, description: tool.description },
-      }
+    ? pageMetadata(
+        tool.name,
+        `${tool.description} Work locally in your browser, without an account.`,
+        `/tools/${slug}`,
+      )
     : {};
 }
 export default async function UtilityPage({ params }: Props) {
@@ -55,7 +50,7 @@ export default async function UtilityPage({ params }: Props) {
   return (
     <main
       id="main"
-      className={`utility-shell${tool.family === "files" || tool.family === "images" ? " document-workspace" : ""}`}
+      className={`utility-shell${tool.family === "files" || tool.family === "images" || tool.slug === "invoice-receipt-maker" ? " document-workspace" : ""}${tool.slug === "invoice-receipt-maker" ? " invoice-page" : ""}`}
     >
       {tool.family === "files" && (
         <nav className="workflow-family" aria-label="AVANTIC Files">

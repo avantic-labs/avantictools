@@ -47,6 +47,7 @@ approved sources before changing scope. Historical Day-1 architecture and resear
 remain in the repository; the current work order amends the public scope.
 
 Work on implementation branches and review Vercel Previews before merge. Production
-canonical URLs default to the verified `https://avantictools.vercel.app` alias;
-set `NEXT_PUBLIC_SITE_URL` only when an approved production domain is configured.
+canonical URLs use the Founder-approved `https://avantictools.vercel.app` origin
+in `lib/site.ts`. The canonical Vercel project is `avantictools`; see
+[Work Order 004](docs/WORK_ORDER_004.md) for deployment and domain decisions.
 Preview pages are marked noindex. A successful Preview is not production approval.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import { notFound } from "next/navigation";
 import { Catalog } from "@/components/product/Catalog";
 import { categories, tools } from "@/data/tools";
@@ -11,11 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
   const item = categories.find((entry) => entry.id === category);
   return item
-    ? {
-        title: item.name,
-        description: item.description,
-        alternates: { canonical: `/categories/${item.id}` },
-      }
+    ? pageMetadata(item.name, item.description, `/categories/${item.id}`)
     : {};
 }
 export default async function CategoryPage({ params }: Props) {

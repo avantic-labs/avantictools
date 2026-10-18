@@ -1,42 +1,134 @@
-import type { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Privacy and local processing",
-  description:
-    "How AVANTIC Tools handles files, text, dates, invoices and generated passwords on your device.",
-  alternates: { canonical: "/privacy" },
-};
+import Link from "next/link";
+import { pageMetadata } from "@/lib/page-metadata";
+export const metadata = pageMetadata(
+  "Privacy Policy",
+  "How AVANTIC Tools processes files and inputs locally, what reaches our hosting provider, and how downloads, sharing and product events work.",
+  "/privacy",
+);
 export default function Privacy() {
   return (
     <main id="main" className="prose-page">
-      <h1>Your work stays on your device.</h1>
+      <h1>Privacy Policy</h1>
+      <p className="hint">Updated 17 October 2026</p>
       <p>
-        Files, photos, signatures, text, dates, invoice details and generated
-        passwords are processed in your browser. These tools do not upload their
-        contents or save them to an AVANTIC account.
+        This policy describes the current AVANTIC Tools website, a product of
+        AVANTIC LABS. It distinguishes the information you use inside a tool
+        from the ordinary requests needed to load the website.
       </p>
-      <h2>Downloads and sharing</h2>
+      <h2>Information processed by the tools</h2>
       <p>
-        Downloads create a new file on your device. Share uses your device’s
-        share sheet only when you choose it. Copy writes to your clipboard only
-        when you press Copy.
+        The tools may work with documents, photographs, signatures, text, links,
+        dates, invoice items, customer names, business and bank-transfer
+        details, and generated passwords. These inputs and outputs are processed
+        on your device in your browser. The current tools do not upload them to
+        AVANTIC servers or an external processing service.
       </p>
-      <h2>Product events</h2>
       <p>
-        The application emits local product events containing only the tool name
-        and a fixed action such as download. It does not include your inputs,
-        filenames, file contents or generated results. No external analytics
-        transport or session recording is enabled.
+        Search also runs locally. Search phrases are not placed in the address
+        bar, saved to browser storage or sent to an analytics service.
       </p>
-      <h2>Page requests</h2>
+      <h2>Files, camera and temporary work</h2>
       <p>
-        Your browser requests the application, fonts and processing code from
-        the site. The hosting service handles these ordinary page requests; your
-        working files are not part of them.
+        You choose which files to open. Where supported, the camera option opens
+        your device’s capture interface; you can use an existing photo instead.
+        The application does not request access to your microphone or location.
       </p>
-      <h2>Clearing your work</h2>
       <p>
-        Use Clear or leave the page to discard the workspace. Downloads and
-        clipboard contents remain under your device’s control.
+        Workspaces keep temporary data in browser memory. They do not create
+        accounts or save drafts to local storage, session storage or a database.
+        Moving a file between AVANTIC Files tools uses a temporary in-memory
+        handoff that expires after one minute if it is not used. Reloading or
+        closing the page discards that workspace.
+      </p>
+      <p>
+        Temporary image and download references are released when no longer
+        needed. This is resource cleanup, not a guarantee of secure erasure from
+        your device’s memory, caches or operating system.
+      </p>
+      <h2>Downloads, copying and sharing</h2>
+      <p>
+        Download saves an output through your browser. Copy writes the selected
+        output to your clipboard only after you press Copy. Share, where
+        supported, opens your device’s share sheet only after you choose Share.
+      </p>
+      <p>
+        Saved files, clipboard history, device backups and the apps or
+        recipients you select are controlled by you and those services. Clearing
+        a workspace does not delete a downloaded file or clear your device’s
+        clipboard.
+      </p>
+      <h2>Product events and analytics</h2>
+      <p>
+        The application currently emits local events containing only an allowed
+        tool identifier and a fixed action, such as opening a tool or
+        downloading a result. No external analytics transport, advertising
+        tracker or session recording is enabled in the application.
+      </p>
+      <p>
+        Those events exclude entered text, search phrases, file contents and
+        names, passwords, photos, signatures, dates of birth, invoice details,
+        customer names and bank information. We do not send the content of an
+        error or a workspace to analytics.
+      </p>
+      <h2>Hosting and technical requests</h2>
+      <p>
+        Vercel hosts this website. Loading a page requires requests for the
+        page, application code, fonts, icons and other assets. The hosting
+        infrastructure can receive technical information such as your IP
+        address, requested URL, browser information and request timing. Your
+        working files and form contents are not included in those requests by
+        our tools.
+      </p>
+      <p>
+        Hosting services may maintain operational and security logs under their
+        own policies. This application does not set a separate retention period
+        for those provider records. Read{" "}
+        <a
+          href="https://vercel.com/legal/privacy-policy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Vercel’s Privacy Policy (opens in a new tab)
+        </a>{" "}
+        for information about its practices.
+      </p>
+      <h2>Cookies and third-party services</h2>
+      <p>
+        The public application does not set advertising, analytics or account
+        cookies. Hosting infrastructure may use security mechanisms, and
+        restricted review deployments may use access cookies. These do not store
+        the contents of a tool workspace.
+      </p>
+      <p>
+        Social and community links are ordinary links, not embedded feeds.
+        Opening one takes you to another service, whose own terms and privacy
+        policy apply. Downloading the site’s processing libraries does not send
+        your files to their authors.
+      </p>
+      <h2>Security and your choices</h2>
+      <p>
+        The site uses HTTPS and browser security headers. File processing has
+        size and page limits to reduce memory failures, and generated passwords
+        use the browser’s cryptographic random-number generator. These measures
+        cannot guarantee security on a compromised device or against every
+        browser extension.
+      </p>
+      <p>
+        You can use the tools without an account, decline camera access, avoid
+        sharing, clear a workspace or close the page. Use a device you trust for
+        sensitive documents and review the destination before sharing them.
+      </p>
+      <h2>Changes and questions</h2>
+      <p>
+        We will update this policy when the application’s practices change. The
+        date above identifies this version. Any future server-side document
+        processing would need its own privacy and security decision and clear
+        notice.
+      </p>
+      <p>
+        For product questions, use an official AVANTIC LABS community or social
+        account listed on the <Link href="/about">About page</Link>. Do not post
+        sensitive files, passwords or account details in public channels.
       </p>
     </main>
   );

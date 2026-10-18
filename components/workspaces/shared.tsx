@@ -126,9 +126,17 @@ export function Upload({
         />
       </div>
       <p className="hint">
-        {camera
-          ? "Uses your camera where supported. You can upload an image instead."
-          : "Drop files here, or choose them above. They stay on this device."}
+        {camera ? (
+          "Uses your camera where supported. You can upload an image instead."
+        ) : (
+          <>
+            <span className="desktop-only">
+              Drop files here, or choose them above.{" "}
+            </span>
+            <span className="mobile-only">Choose files from your device. </span>
+            Files stay on this device.
+          </>
+        )}
       </p>
     </div>
   );

@@ -2,7 +2,7 @@ export const categories = [
   {
     id: "files",
     name: "Files & Documents",
-    description: "Turn pages and files into something ready to send.",
+    description: "Scan documents, organize pages and reduce file sizes.",
   },
   {
     id: "applications",
@@ -17,12 +17,13 @@ export const categories = [
   {
     id: "business",
     name: "Business",
-    description: "Prepare the small things that keep work moving.",
+    description:
+      "Create invoices, sales receipts and QR codes for your business.",
   },
   {
     id: "everyday",
     name: "Everyday",
-    description: "Quick answers for tasks that come up again and again.",
+    description: "Quick calculations and secure passwords.",
   },
 ] as const;
 export type CategoryId = (typeof categories)[number]["id"];
@@ -157,7 +158,7 @@ export const comingSoon = [
   {
     name: "Image to PDF",
     group: "Files",
-    description: "A direct conversion path for existing images.",
+    description: "Turn one or more images into a PDF.",
   },
   {
     name: "PDF to Images",

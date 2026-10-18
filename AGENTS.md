@@ -15,7 +15,11 @@ This repository is the production codebase for AVANTIC Tools. AI coding agents m
 
 If existing prototype code conflicts with approved Day-1 scope, the approved documents win.
 
-## Current work order: 003 Founder amendment
+## Current work order: 004 refinement
+
+The Founder’s Work Order 004 preserves the twelve-tool scope and brand while refining discovery, mobile workflows, invoices, content, motion and launch infrastructure. See `docs/WORK_ORDER_004.md`. The explicit canonical production origin is `https://avantictools.vercel.app`; do not activate custom DNS or delete either Vercel project. Preserve local processing and all verified utility behavior.
+
+## Work Order 003 Founder amendment
 
 The Founder’s Work Order 003 explicitly supersedes the historical Day-1 scope
 and information architecture below. Current authority is: the Founder’s goal,

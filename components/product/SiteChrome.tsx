@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SearchDialog } from "./SearchDialog";
-import { categories } from "@/data/tools";
+import { SocialLinks } from "./SocialLinks";
+import { MobileMenu } from "./MobileMenu";
 export function Brand() {
   return (
     <Link
@@ -31,34 +32,15 @@ export function SiteHeader() {
             <Link href="/#tools" prefetch={false}>
               Browse tools
             </Link>
-            <Link href="/#categories" prefetch={false}>
-              Categories
+            <Link href="/categories/files" prefetch={false}>
+              Files
             </Link>
-            <Link href="/about" prefetch={false}>
-              About
+            <Link href="/categories/business" prefetch={false}>
+              Business
             </Link>
           </nav>
           <SearchDialog />
-          <details className="mobile-menu">
-            <summary>Menu</summary>
-            <nav aria-label="Mobile">
-              <Link href="/#tools" prefetch={false}>
-                Browse tools
-              </Link>
-              {categories.map((category) => (
-                <Link
-                  href={`/categories/${category.id}`}
-                  key={category.id}
-                  prefetch={false}
-                >
-                  {category.name}
-                </Link>
-              ))}
-              <Link href="/about" prefetch={false}>
-                About AVANTIC LABS
-              </Link>
-            </nav>
-          </details>
+          <MobileMenu />
         </div>
       </header>
     </>
@@ -76,10 +58,11 @@ export function SiteFooter() {
           <Link href="/privacy" prefetch={false}>
             Privacy
           </Link>
-          <Link href="/#tools" prefetch={false}>
-            Browse tools
+          <Link href="/terms" prefetch={false}>
+            Terms
           </Link>
         </nav>
+        <SocialLinks />
       </div>
     </footer>
   );

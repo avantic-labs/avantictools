@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import type { ToolId } from "@/data/tools";
 import { TextCounter } from "@/components/utilities/TextCounter";
 import { CaseConverter } from "@/components/utilities/CaseConverter";
-import { QrCodeGenerator } from "@/components/utilities/QrCodeGenerator";
+
 import { PasswordGenerator } from "@/components/utilities/PasswordGenerator";
 function Loading() {
   return (
@@ -14,6 +14,13 @@ function Loading() {
 }
 // Heavy document/image modules are separate route-level chunks. The catalog,
 // text tools and calculators do not import PDF libraries or their worker.
+const QrCodeGenerator = dynamic(
+  () =>
+    import("@/components/utilities/QrCodeGenerator").then(
+      (m) => m.QrCodeGenerator,
+    ),
+  { loading: Loading },
+);
 const Scan = dynamic(() => import("./ScanToPdf").then((m) => m.ScanToPdf), {
   ssr: false,
   loading: Loading,
@@ -43,6 +50,13 @@ const AgeDate = dynamic(
   { ssr: false, loading: Loading },
 );
 export function ToolWorkspace({ tool }: { tool: ToolId }) {
+  return (
+    <div className="workspace-stage">
+      <WorkspaceContent tool={tool} />
+    </div>
+  );
+}
+function WorkspaceContent({ tool }: { tool: ToolId }) {
   switch (tool) {
     case "scan-to-pdf":
       return <Scan />;

@@ -28,6 +28,25 @@ export function SearchDialog() {
         className="search-dialog"
         aria-labelledby="search-dialog-title"
         onClose={() => setQuery("")}
+        onKeyDown={(event) => {
+          if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
+          const links = Array.from(
+            dialog.current?.querySelectorAll<HTMLAnchorElement>(
+              ".search-results a",
+            ) ?? [],
+          );
+          const index = links.indexOf(event.target as HTMLAnchorElement);
+          if (event.target !== search.current && index < 0) return;
+          event.preventDefault();
+          if (event.key === "ArrowUp" && index <= 0) search.current?.focus();
+          else
+            links[
+              Math.min(
+                links.length - 1,
+                Math.max(0, index + (event.key === "ArrowDown" ? 1 : -1)),
+              )
+            ]?.focus();
+        }}
       >
         <div className="section-title">
           <h2 id="search-dialog-title">Find a tool</h2>
