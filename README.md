@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AVANTIC Tools
 
-## Getting Started
+AVANTIC Tools — a product of AVANTIC LABS. Twelve browser-based workflows for
+files, application images, writing, business documents and everyday calculations.
 
-First, run the development server:
+## Develop and verify
 
-```bash
+Use Node.js 22.13 or newer (PDF.js requires a current runtime).
+
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npx playwright install chromium
+npm run test:e2e
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The browser suite starts the production build and covers eight viewport profiles.
+Set `PLAYWRIGHT_BASE_URL` to test an accessible deployed Preview instead.
+Traces, videos and automatic screenshots are disabled to avoid retaining inputs.
+Use synthetic files for manual QA.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Architecture and privacy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`data/tools.ts` is the public catalog. Static pages render on the server; focused
+client workspaces load only the libraries they need. AVANTIC Files shares image
+preparation, bounded PDF processing, validation, downloads and ephemeral handoffs.
+PDF parsing/assembly runs in a disposable worker. PDF previews use a local PDF.js
+worker. Invoice generation embeds a local font with Nigerian naira support.
 
-## Learn More
+No working content is uploaded or persisted. Product events cross an exact
+runtime allowlist before the optional PostHog adapter. The adapter uses no
+autocapture, replay, cookies, persistent ID or person profile, and stays inactive
+unless its public production configuration is present.
+PDF compression is explicitly lossy and flattens interactive content. Sales
+receipts record merchant-entered details without claiming payment verification.
 
-To learn more about Next.js, take a look at the following resources:
+`npm ci`, `npm run dev` and `npm run build` prepare local worker/font assets;
+no runtime CDN is required. Fonts retain their license in `assets/fonts/OFL.txt`.
+The original Founder-supplied artwork is preserved in `public/avantic-tools-logo.jpg`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Product and deployment authority
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Read [AGENTS.md](AGENTS.md), [Work Order 003](docs/WORK_ORDER_003.md) and the linked
+approved sources before changing scope. Historical Day-1 architecture and research
+remain in the repository; the current work order amends the public scope.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Work on implementation branches and review Vercel Previews before merge. Production
+canonical URLs use the Founder-approved `https://avantictools.vercel.app` origin
+in `lib/site.ts`. The canonical Vercel project is `avantictools`; see
+[Work Order 005](docs/WORK_ORDER_005.md) for launch, CI and measurement rules.
+Preview pages are marked noindex. A successful Preview is not production approval.
