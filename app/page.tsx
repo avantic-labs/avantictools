@@ -3,6 +3,7 @@ import { SITE_URL } from "@/lib/site";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Catalog } from "@/components/product/Catalog";
+import { HeroMotion } from "@/components/product/HeroMotion";
 import { tools, comingSoon } from "@/data/tools";
 export const metadata = {
   ...pageMetadata(
@@ -29,15 +30,18 @@ export default function HomePage() {
         }}
       />
       <section className="product-intro">
-        <h1>
-          Useful tools.
-          <br />
-          No friction.
-        </h1>
-        <p>
-          Scan documents, fix files, prepare applications and handle everyday
-          tasks.
-        </p>
+        <div className="intro-copy">
+          <h1>
+            Useful tools.
+            <br />
+            No friction.
+          </h1>
+          <p>
+            Scan documents, fix files, prepare applications and handle everyday
+            tasks.
+          </p>
+        </div>
+        <HeroMotion />
       </section>
       <Catalog tools={tools}>
         <nav className="popular-actions" aria-label="Popular actions">

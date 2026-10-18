@@ -2,6 +2,41 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { socialLinks } from "../../data/socials";
 
+test("homepage motion supports reduced motion without interrupting discovery", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const externalRequests: string[] = [];
+  page.on("request", (request) => {
+    if (new URL(request.url()).origin !== new URL(page.url()).origin)
+      externalRequests.push(request.url());
+  });
+  const canvas = page.locator(".hero-motion canvas");
+  await expect(canvas).toBeVisible();
+  await expect(page.getByRole("searchbox")).toBeVisible();
+  const first = await canvas.evaluate((element: HTMLCanvasElement) =>
+    element.toDataURL(),
+  );
+  await page.waitForTimeout(500);
+  const second = await canvas.evaluate((element: HTMLCanvasElement) =>
+    element.toDataURL(),
+  );
+  expect(second).not.toBe(first);
+  expect(externalRequests).toEqual([]);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.waitForTimeout(100);
+  const staticFrame = await canvas.evaluate((element: HTMLCanvasElement) =>
+    element.toDataURL(),
+  );
+  await page.waitForTimeout(500);
+  expect(
+    await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL()),
+  ).toBe(staticFrame);
+  await page.getByRole("searchbox").fill("invoice");
+  await expect(page.locator(".catalog-card")).toHaveCount(1);
+});
+
 test("primary search is visible, keyboard usable and keeps mobile category navigation contained", async ({
   page,
 }) => {
