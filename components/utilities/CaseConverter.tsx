@@ -22,6 +22,7 @@ export function CaseConverter() {
 
   function markCompleted(value: string) {
     if (value && !completed.current) {
+      trackUtilityEvent("case-converter", "tool_started");
       trackUtilityEvent("case-converter", "tool_completed", "convert");
       completed.current = true;
     }

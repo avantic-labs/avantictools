@@ -3,6 +3,37 @@ import AxeBuilder from "@axe-core/playwright";
 import { socialLinks } from "../../data/socials";
 import { tools } from "../../data/tools";
 
+test("attribution and search analytics keep literal queries out of events", async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as typeof window & { launchEvents: unknown[] }).launchEvents = [];
+    window.addEventListener("avantic:analytics", (event) =>
+      (window as typeof window & { launchEvents: unknown[] }).launchEvents.push((event as CustomEvent).detail),
+    );
+  });
+  const privateQuery = "passport photo";
+  await page.goto("/?utm_source=instagram&utm_medium=social&utm_campaign=tools_launch&utm_content=private");
+  await page.getByRole("searchbox").fill(privateQuery);
+  await page.waitForTimeout(550);
+  await page.locator(".catalog-card a").first().click();
+  const events = await page.evaluate(() => (window as typeof window & { launchEvents: unknown[] }).launchEvents);
+  const serialized = JSON.stringify(events);
+  expect(serialized).not.toContain(privateQuery);
+  expect(serialized).not.toContain("utm_content");
+  expect(events).toContainEqual(expect.objectContaining({
+    name: "page_view",
+    properties: expect.objectContaining({
+      traffic_source: "instagram",
+      traffic_medium: "social",
+      campaign: "tools_launch",
+    }),
+  }));
+  expect(events).toContainEqual(expect.objectContaining({
+    name: "search_used",
+    properties: { result_count_bucket: "one" },
+  }));
+  expect(events).toContainEqual(expect.objectContaining({ name: "search_result_selected" }));
+});
+
 test("homepage motion supports reduced motion without interrupting discovery", async ({
   page,
 }) => {

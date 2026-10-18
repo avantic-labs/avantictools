@@ -1,14 +1,23 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { tools } from "@/data/tools";
 import { matchesTool } from "@/lib/utilities/search";
+import { resultCountBucket, trackEvent } from "@/lib/analytics/utilities";
 export function SearchDialog() {
   const dialog = useRef<HTMLDialogElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const results = tools.filter((tool) => matchesTool(tool, query));
+  useEffect(() => {
+    if (!query.trim()) return;
+    const timer = window.setTimeout(() => trackEvent({
+      name: "search_used",
+      properties: { result_count_bucket: resultCountBucket(results.length) },
+    }), 500);
+    return () => window.clearTimeout(timer);
+  }, [query, results.length]);
   return (
     <>
       <button
@@ -16,6 +25,7 @@ export function SearchDialog() {
         className="nav-search"
         aria-label="Search tools"
         onClick={() => {
+          trackEvent({ name: "search_opened", properties: {} });
           dialog.current?.showModal();
           search.current?.focus();
         }}
@@ -75,12 +85,15 @@ export function SearchDialog() {
         </p>
         {results.length ? (
           <ul className="search-results">
-            {results.map((tool) => (
+            {results.map((tool, index) => (
               <li key={tool.slug}>
                 <Link
                   href={`/tools/${tool.slug}`}
                   prefetch={false}
-                  onClick={() => dialog.current?.close()}
+                  onClick={() => {
+                    trackEvent({ name: "search_result_selected", properties: { tool_id: tool.slug, result_position: index + 1 } });
+                    dialog.current?.close();
+                  }}
                 >
                   <strong>{tool.name}</strong>
                   <span>{tool.description}</span>

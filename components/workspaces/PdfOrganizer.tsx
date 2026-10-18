@@ -24,7 +24,7 @@ export function PdfOrganizer() {
   const [pages, setPages] = useState<PdfPage[]>([]);
   const pageGrid = usePageReflow(pages.map((page) => page.id).join(","));
   const [result, setResult] = useState<Blob | null>(null);
-  const task = useLocalTask();
+  const task = useLocalTask("pdf-organizer");
   async function add(files: File[]) {
     const added = await task.run("Opening PDF pages", async (report) => {
       if (
@@ -202,7 +202,7 @@ export function PdfOrganizer() {
               Review the exported document before sending it.
             </p>
           </ResultPanel>
-          <ContinueWith blob={result} target="file-compressor">
+          <ContinueWith blob={result} from="pdf-organizer" target="file-compressor">
             Compress this PDF
           </ContinueWith>
         </>

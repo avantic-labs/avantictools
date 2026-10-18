@@ -27,6 +27,7 @@ export function PercentageCalculator() {
   }
   function calculate(event: React.FormEvent) {
     event.preventDefault();
+    trackUtilityEvent("percentage-discount-calculator", "tool_started");
     reset();
     try {
       if (!x.trim() || !y.trim()) throw new Error("Enter both numbers.");
@@ -37,6 +38,7 @@ export function PercentageCalculator() {
         "calculate",
       );
     } catch (error) {
+      trackUtilityEvent("percentage-discount-calculator", "tool_error", "invalid_input");
       setError(
         error instanceof RangeError ? error.message : "Enter both numbers.",
       );

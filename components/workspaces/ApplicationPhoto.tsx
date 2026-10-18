@@ -36,7 +36,7 @@ export function ApplicationPhoto() {
     width: number;
     height: number;
   } | null>(null);
-  const task = useLocalTask();
+  const task = useLocalTask("application-photo-signature-prep");
   function clearResult() {
     setResult(null);
     task.setError("");

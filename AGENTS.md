@@ -1,6 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
-# Next.js repository rule
-This project runs a current Next.js release. Before using framework APIs that may have changed, read the relevant guide under `node_modules/next/dist/docs/` and heed deprecation notices.
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # AVANTIC Tools — AI Worker Operating Rules
@@ -15,9 +20,23 @@ This repository is the production codebase for AVANTIC Tools. AI coding agents m
 
 If existing prototype code conflicts with approved Day-1 scope, the approved documents win.
 
-## Current work order: 004 refinement
+## Current work order: 005 production evidence
 
-The Founder’s Work Order 004 preserves the twelve-tool scope and brand while refining discovery, mobile workflows, invoices, content, motion and launch infrastructure. See `docs/WORK_ORDER_004.md`. The explicit canonical production origin is `https://avantictools.vercel.app`; do not activate custom DNS or delete either Vercel project. Preserve local processing and all verified utility behavior.
+Work Order 005 freezes subjective redesign and feature expansion. Preserve the
+twelve verified workflows and visual system. Launch, measure, observe, form a
+hypothesis, then make the smallest evidence-supported change. See
+`docs/WORK_ORDER_005.md` and `docs/EVIDENCE_BACKLOG.md`. Production remains
+`https://avantictools.vercel.app`; do not activate custom DNS or modify/delete
+the duplicate Vercel project.
+
+All analytics must cross the typed runtime allowlist in `lib/analytics`. Use
+explicit product events only. Never add autocapture, session replay, heatmaps,
+fingerprinting, persistent user profiles or advertising identifiers. Never send
+raw search phrases, entered text, file contents or names, passwords, QR payloads,
+photos, signatures, personal dates, invoice/customer/payment details, raw errors
+or stack traces. Traffic attribution accepts only the documented campaign enums.
+PostHog is isolated behind the adapter; provider calls do not belong in product
+components.
 
 ## Work Order 003 Founder amendment
 
@@ -95,21 +114,10 @@ Current product-runtime provider decision:
 
 This runtime provider choice is separate from the coding agent used to build the repository.
 
-## Required analytics events
-Use one consistent schema. Day-1 event vocabulary includes:
-- `tool_viewed`
-- `tool_completed`
-- `workflow_step_completed`
-- `workflow_completed`
-- `audit_submitted`
-- `audit_abandoned`
-- `cta_clicked`
-- `artifact_shared`
-- `search_query`
-- `cross_tool_navigation`
-- `ai_cost`
-
-Every AI gateway call must emit `ai_cost` with provider, usage/cost units, and workflow.
+## Analytics event authority
+The Work Order 005 event dictionary in `docs/WORK_ORDER_005.md` supersedes the
+historical Day-1 list. Event names and properties are closed runtime allowlists.
+Do not introduce an arbitrary property bag or a raw `search_query` event.
 
 ## API boundaries
 Planned routes:

@@ -41,6 +41,7 @@ export function InvoiceMaker() {
   const [sections, setSections] = useState<boolean[] | null>(null);
   const feedback = useRef<HTMLDivElement>(null);
   const output = useRef<HTMLDivElement>(null);
+  const editingStarted = useRef(false);
   function toggleSection(index: number) {
     setSections((current) =>
       (current ?? [true, !compact, !compact]).map((open, position) =>
@@ -55,7 +56,7 @@ export function InvoiceMaker() {
   const [discount, setDiscount] = useState(false);
   const [tax, setTax] = useState(false);
   const [result, setResult] = useState<Blob | null>(null);
-  const task = useLocalTask();
+  const task = useLocalTask("invoice-receipt-maker");
   let totals: ReturnType<typeof invoiceTotals> | null = null;
   try {
     totals = invoiceTotals(data.items, data.discount, data.tax);
@@ -66,6 +67,10 @@ export function InvoiceMaker() {
     key: K,
     value: BusinessDocument[K],
   ) {
+    if (!editingStarted.current) {
+      trackUtilityEvent("invoice-receipt-maker", "tool_started");
+      editingStarted.current = true;
+    }
     setData({ ...data, [key]: value });
     setResult(null);
     task.setError("");

@@ -1,10 +1,11 @@
 "use client";
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
 import { categories, type Tool, type CategoryId } from "@/data/tools";
 import { ToolIcon } from "./ToolIcon";
 import { matchesTool } from "@/lib/utilities/search";
+import { resultCountBucket, trackEvent } from "@/lib/analytics/utilities";
 export function Catalog({
   tools,
   category,
@@ -31,6 +32,15 @@ export function Catalog({
     (tool) =>
       (!category || tool.category === category) && matchesTool(tool, query),
   );
+  const opened = useRef(false);
+  useEffect(() => {
+    if (!query.trim()) return;
+    const timer = window.setTimeout(() => trackEvent({
+      name: "search_used",
+      properties: { result_count_bucket: resultCountBucket(filtered.length) },
+    }), 500);
+    return () => window.clearTimeout(timer);
+  }, [filtered.length, query]);
   return (
     <>
       <section id="search" className="catalog-search" aria-label="Find a tool">
@@ -45,6 +55,12 @@ export function Catalog({
             placeholder="PDF, photo, discount"
             autoComplete="off"
             aria-controls="tools"
+            onFocus={() => {
+              if (!opened.current) {
+                trackEvent({ name: "search_opened", properties: {} });
+                opened.current = true;
+              }
+            }}
             onKeyDown={(event) => {
               if (event.key === "ArrowDown") {
                 event.preventDefault();
@@ -78,6 +94,7 @@ export function Catalog({
             href={`/categories/${item.id}`}
             prefetch={false}
             aria-current={category === item.id ? "page" : undefined}
+            onClick={() => trackEvent({ name: "category_selected", properties: { category: item.id } })}
           >
             <span className="category-full">{item.name}</span>
             <span className="category-short" aria-hidden="true">
@@ -158,11 +175,20 @@ export function Catalog({
               <div className="catalog-grid">
                 {filtered
                   .filter((tool) => tool.category === item.id)
-                  .map((tool) => (
+                  .map((tool, resultIndex) => (
                     <article className="catalog-card" key={tool.slug}>
                       <ToolIcon name={tool.icon} />
                       <h3>
-                        <Link href={`/tools/${tool.slug}`} prefetch={false}>
+                        <Link
+                          href={`/tools/${tool.slug}`}
+                          prefetch={false}
+                          onClick={() => {
+                            if (query.trim()) trackEvent({
+                              name: "search_result_selected",
+                              properties: { tool_id: tool.slug, result_position: resultIndex + 1 },
+                            });
+                          }}
+                        >
                           {tool.name}
                         </Link>
                       </h3>

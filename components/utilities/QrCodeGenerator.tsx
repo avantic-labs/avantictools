@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { trackUtilityEvent } from "@/lib/analytics/utilities";
+import { trackOutputEvent, trackUtilityEvent } from "@/lib/analytics/utilities";
 import {
   generateQrPng,
   QR_MAX_BYTES,
@@ -30,6 +30,7 @@ export function QrCodeGenerator() {
 
   async function generate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    trackUtilityEvent("qr-code-generator", "tool_started");
     if (generationInProgress.current) return;
 
     const error = validateQrInput(input);
@@ -53,6 +54,7 @@ export function QrCodeGenerator() {
       setStatus("QR code ready. You can download the PNG image.");
       trackUtilityEvent("qr-code-generator", "tool_completed", "generate");
     } catch {
+      trackUtilityEvent("qr-code-generator", "tool_error", "export_failed");
       if (currentRevision === revision.current) {
         setActionError("The QR code could not be generated. Please try again.");
       }
@@ -77,8 +79,9 @@ export function QrCodeGenerator() {
         link.remove();
       }
       setStatus("PNG download started.");
-      trackUtilityEvent("qr-code-generator", "tool_completed", "download");
+      trackOutputEvent("qr-code-generator", "download_completed", "png");
     } catch {
+      trackUtilityEvent("qr-code-generator", "tool_error", "export_failed");
       setActionError("The PNG download could not start. Please try again.");
     }
   }

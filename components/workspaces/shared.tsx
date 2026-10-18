@@ -3,19 +3,21 @@ import { useEffect, useId, useRef, useState, type DragEvent } from "react";
 import { AlertCircle, Download, Share2 } from "lucide-react";
 import {
   downloadBlob,
+  fileErrorCode,
   fileMessage,
   fileSize,
   yieldToBrowser,
 } from "@/lib/files/shared";
-import { trackUtilityEvent } from "@/lib/analytics/utilities";
+import { trackOutputEvent, trackUtilityEvent } from "@/lib/analytics/utilities";
 import type { ToolId } from "@/data/tools";
 
-export function useLocalTask() {
+export function useLocalTask(tool?: ToolId) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState({ done: 0, total: 0, message: "" });
   const active = useRef(false);
   const locked = useRef(false);
+  const started = useRef(false);
   useEffect(() => {
     active.current = true;
     return () => {
@@ -28,6 +30,10 @@ export function useLocalTask() {
   ): Promise<T | undefined> {
     if (locked.current) return;
     locked.current = true;
+    if (tool && !started.current) {
+      trackUtilityEvent(tool, "tool_started");
+      started.current = true;
+    }
     setBusy(true);
     setError("");
     setProgress({ done: 0, total: 0, message });
@@ -39,7 +45,10 @@ export function useLocalTask() {
       });
       return active.current ? result : undefined;
     } catch (problem) {
-      if (active.current) setError(fileMessage(problem));
+      if (active.current) {
+        setError(fileMessage(problem));
+        if (tool) trackUtilityEvent(tool, "tool_error", fileErrorCode(problem));
+      }
     } finally {
       locked.current = false;
       if (active.current) setBusy(false);
@@ -202,14 +211,16 @@ export function ResultPanel({
     Boolean(navigator.canShare?.({ files: [file] }));
   async function share() {
     try {
+      trackOutputEvent(tool, "share_started", blob.type === "application/pdf" ? "pdf" : blob.type === "image/png" ? "png" : blob.type === "image/webp" ? "webp" : "jpeg");
       await navigator.share({ files: [file], title: "AVANTIC Tools" });
-      trackUtilityEvent(tool, "tool_completed", "share");
       setMessage("Shared.");
     } catch (error) {
-      if (!(error instanceof DOMException && error.name === "AbortError"))
+      if (!(error instanceof DOMException && error.name === "AbortError")) {
+        trackUtilityEvent(tool, "tool_error", "share_unavailable");
         setMessage(
           "Sharing is unavailable. Download the file and attach it instead.",
         );
+      }
     }
   }
   return (
@@ -234,7 +245,7 @@ export function ResultPanel({
           className="button"
           onClick={() => {
             downloadBlob(blob, filename);
-            trackUtilityEvent(tool, "tool_completed", "download");
+            trackOutputEvent(tool, "download_completed", blob.type === "application/pdf" ? "pdf" : blob.type === "image/png" ? "png" : blob.type === "image/webp" ? "webp" : "jpeg");
             setMessage("Download started.");
           }}
         >

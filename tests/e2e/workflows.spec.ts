@@ -70,19 +70,14 @@ test.afterEach(async ({ page }, info) => {
   const result = await page.evaluate(() => window.workflowAudit);
   expect(result.writes).toBe(0);
   for (const event of result.events) {
-    expect(["tool_viewed", "tool_completed"]).toContain(event.name);
-    expect(Object.keys(event.properties).sort()).toEqual(
-      event.name === "tool_viewed" ? ["tool_id"] : ["action", "tool_id"],
-    );
-    expect(/^[a-z-]+$/.test(String(event.properties.tool_id))).toBe(true);
+    expect(["page_view", "tool_viewed", "tool_started", "tool_completed", "tool_error", "download_completed", "share_started", "workflow_handoff"]).toContain(event.name);
+    expect(JSON.stringify(event)).not.toMatch(/Synthetic|long-name-|customer|filename/);
+    if (event.properties.tool_id)
+      expect(/^[a-z-]+$/.test(String(event.properties.tool_id))).toBe(true);
+    if (event.name === "tool_viewed")
+      expect(Object.keys(event.properties).sort()).toEqual(["category", "tool_id"]);
     if (event.name === "tool_completed")
-      expect([
-        "process",
-        "calculate",
-        "generate",
-        "download",
-        "share",
-      ]).toContain(event.properties.action);
+      expect(["process", "calculate", "generate"]).toContain(event.properties.completion_action);
   }
 });
 
