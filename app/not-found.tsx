@@ -1,9 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 export const metadata: Metadata = {
-  title: "Page not found",
-  description:
+  ...pageMetadata(
+    "Page not found",
     "This address does not lead to a tool. Search AVANTIC Tools or browse the catalog to find the task you need.",
+    "/",
+  ),
+  alternates: { canonical: null },
   robots: { index: false, follow: false },
 };
 export default function NotFound() {

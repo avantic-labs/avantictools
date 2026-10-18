@@ -187,6 +187,15 @@ test("catalog, search, categories, Coming Soon, metadata and 404 are intentional
   await expect(
     page.getByRole("link", { name: "Browse tools", exact: true }).first(),
   ).toBeVisible();
+  await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute(
+    "content",
+    /^https:\/\/avantictools\.vercel\.app\//,
+  );
+  await expect(page.locator('meta[name="twitter:image"]').first()).toHaveAttribute(
+    "content",
+    /^https:\/\/avantictools\.vercel\.app\//,
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
   expect(
     await page.evaluate(async () => (await fetch("/sitemap.xml")).status),
   ).toBe(200);
