@@ -7,7 +7,7 @@ Scope: refinement of the twelve verified workflows, with no tool expansion. Base
 | Area | Implementation / evidence |
 | --- | --- |
 | Discovery | Search directly follows intro; six example searches, keyboard result navigation, dialog focus and Escape covered in `launch.spec.ts` and `workflows.spec.ts`. Popular actions and truthful on-device/no-account line. |
-| Mobile catalog | Compact rows, unchanged twelve-tool registry, horizontal category and Files rails. Eight viewports: 320, 360, 390, 412, 768, 1024, 1280, 1920px. |
+| Mobile catalog | Compact rows, unchanged twelve-tool registry, horizontal category and Files rails. Eight viewports: 320, 360, 390, 412, 768, 1024, 1280, 1920px. Short file workspaces reserve only the space needed while loading; Invoice keeps its larger reservation. |
 | Connected workflows | Existing scan → organize → compress handoff and all file-processing regression tests retained. Camera-first DOM order on phones; upload-first on desktop. |
 | Application prep | Portal dimensions/format/size requirements precede crop controls; concise instructions; crop, signature trim, target size and exports retain regression coverage. |
 | Invoice | Three expandable sections preserve state; optional logo disclosure; persistent total/Create action; desktop live preview with keyboard-scrollable region; same exact-kobo calculation and PDF generation. |
@@ -22,7 +22,7 @@ Scope: refinement of the twelve verified workflows, with no tool expansion. Base
 
 ## Visual baseline comparison
 
-Recorded Work Order 003 full-page screenshots at 320/412px were 5,445/4,978px tall. The final Work Order 004 captures are 3,941/3,536px respectively: about **28%/29% shorter** despite additional footer links. Search starts at 347px/323px. The twelve-tool catalog itself is 1,783px/1,567px tall. All 24 home/scan/invoice captures across eight widths report no horizontal page overflow. Captures complement the automated checks.
+Recorded Work Order 003 full-page homepage screenshots at 320/412px were 5,445/4,978px tall. The Work Order 004 captures are 3,941/3,536px respectively: about **28%/29% shorter** despite additional footer links. Search starts at 347px/323px. The twelve-tool catalog itself is 1,783px/1,567px tall. Final Scan to PDF captures are 1,396px at 320px and 1,285px at 390px, with related actions immediately after the workspace instead of a large blank loading reservation. All 24 final home/scan/invoice captures across eight widths report no horizontal page overflow. Captures complement the automated checks.
 
 ## Reviews and repairs
 
@@ -36,7 +36,7 @@ Search and popular tasks are above featured workflows. Category names are not re
 
 ### Engineering
 
-Found and repaired a hidden category label causing page overflow, an unfocusable scrollable invoice preview, and policy links distinguishable only by color. Additional runtime review found `pdf-lib` loading when a PDF workspace opened; it now loads on the processing action. Initial Lighthouse exposed invoice CLS 0.533; reserved workspace space, established invoice width in server markup and preloaded the local UI font. The final isolated Lighthouse runs record CLS 0 on Home, Word Counter and Invoice; a separate 26-route/viewport audit also recorded zero. The new page animation batches layout reads, releases animations/listeners on update/unmount and honors reduced motion. Blob/canvas/worker cleanup remains the verified Work Order 003 implementation.
+Found and repaired a hidden category label causing page overflow, an unfocusable scrollable invoice preview, and policy links distinguishable only by color. Additional runtime review found `pdf-lib` loading when a PDF workspace opened; it now loads on the processing action. Initial Lighthouse exposed invoice CLS 0.533; reserved workspace space, established invoice width in server markup and preloaded the local UI font. Final isolated Lighthouse runs record CLS 0 on Home, Word Counter and Invoice. After reducing excessive empty space on short tools, a separate 26-route/viewport audit recorded max CLS 0.046 (Age & Date at 390px), still within the good threshold. The new page animation batches layout reads, releases animations/listeners on update/unmount and honors reduced motion. Blob/canvas/worker cleanup remains the verified Work Order 003 implementation.
 
 ### Content
 
@@ -44,9 +44,9 @@ Reviewed homepage, registry descriptions, all tool controls/statuses, navigation
 
 ## Verification status
 
-- Lint, type-check and production build pass after the font/layout changes; 83 unit tests passed before the final font preload (which does not change tool logic).
-- The full local browser suite passed: 35 tests across eight profiles (280 cases). A later focused regression on layout, invoice, search and accessibility passed 32 cases at all eight widths. Hosted Preview rerun is pending.
-- Final isolated Lighthouse results: Home 96 performance, Word Counter 99, Invoice 97; each scored 100 in accessibility, best practices and SEO. LCP: 2.78s, 2.20s and 2.69s. CLS: 0 on all three. A separate 26-page/viewport audit under 4x CPU recorded max CLS 0. These are lab measures, not field Core Web Vitals.
+- Lint, type-check, 83 unit tests and a production build using Next.js's supported webpack compiler pass on the final layout. Local Turbopack builds encounter an environment `Operation not permitted` error when their PostCSS worker binds a port; the previous committed version built successfully on Vercel. Final Vercel build is pending.
+- The full local browser suite passed: 35 tests across eight profiles (280 cases). A hosted Preview of commit `83a8890` also passed all 280 cases. After the final layout adjustment, a focused regression on layout, invoice, search and accessibility passed 32 cases at all eight widths locally. Final hosted Preview rerun is pending.
+- Final isolated Lighthouse results: Home 96 performance, Word Counter 99, Invoice 99; each scored 100 in accessibility, best practices and SEO. LCP: 2.74s, 2.26s and 2.19s. CLS: 0 on all three. A separate 26-page/viewport audit under 4x CPU recorded max CLS 0.046. These are lab measures, not field Core Web Vitals.
 - Synthetic interaction sample under 4x CPU: catalog search max event 72ms, Word Counter with 3,000 initial words max 32ms. This is supporting evidence, not real-user INP.
 - Initial JS transfer across six sampled routes: 146–159 KiB gzip. Word Counter and Age Calculator downloaded no PDF or invoice-generation runtime; none of the sampled routes did so before tool action. The same audit reported zero unexpected network requests and zero page errors.
 - The final 24 visual captures report zero horizontal overflow. Production browser assets contain no `.map` files after the build check. The production dependency audit found zero known vulnerabilities.

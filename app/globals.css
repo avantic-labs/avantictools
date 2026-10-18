@@ -1628,5 +1628,14 @@ body:has(dialog[open]) {
 }
 
 .workspace-stage {
+  /* Reserve room for the short file tools while their client workspace loads. */
+  min-height: 360px;
+}
+@media (min-width: 768px) {
+  .workspace-stage {
+    min-height: 420px;
+  }
+}
+.invoice-page .workspace-stage {
   min-height: calc(100svh - var(--space-8) * 5);
 }
