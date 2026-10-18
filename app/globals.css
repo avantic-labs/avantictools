@@ -1263,18 +1263,34 @@ body:has(dialog[open]) {
 }
 .footer-inner .social-links {
   width: 100%;
-  gap: 0 var(--space-5);
+  gap: var(--space-2);
 }
 .social-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 var(--space-5);
+  gap: var(--space-2) var(--space-4);
   font-size: var(--text-small);
 }
 .social-links a {
   min-height: var(--control-height);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: var(--control-height);
+  gap: var(--space-2);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--neutral-600);
+}
+.social-links a:hover {
+  color: var(--mark);
+  background: var(--neutral-100);
+}
+.social-links svg {
+  flex-shrink: 0;
+}
+.social-links-labelled a {
+  justify-content: flex-start;
 }
 .button,
 .tabs button,
@@ -1644,7 +1660,20 @@ body:has(dialog[open]) {
   min-height: calc(100svh - var(--space-8) * 5);
 }
 
-/* Ambient hero motion occupies no layout space and never intercepts controls. */
+/* One viewport-sized canvas follows the homepage, without growing with the document. */
+.home-catalog {
+  position: relative;
+  isolation: isolate;
+}
+.home-catalog > :not(.hero-motion) {
+  position: relative;
+  z-index: 1;
+}
+.home-catalog ~ .site-footer {
+  position: relative;
+  z-index: 1;
+  background: var(--canvas);
+}
 .catalog-shell .product-intro {
   position: relative;
   isolation: isolate;
@@ -1674,8 +1703,8 @@ body:has(dialog[open]) {
   line-height: 1.55;
 }
 .hero-motion {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  inset: var(--header-height) 0 0;
   z-index: 0;
   pointer-events: none;
 }
@@ -1684,10 +1713,178 @@ body:has(dialog[open]) {
   width: 100%;
   height: 100%;
 }
+.typing-line {
+  display: block;
+  width: fit-content;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .typing-line {
+    /* Brief no-JS fallback. The full heading is always present in HTML. */
+    animation: headline-fallback 1.4s step-end;
+  }
+}
+@keyframes headline-fallback {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+.utility-heading {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.utility-heading > :not(.tool-motion) {
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+  background: var(--canvas);
+}
+.tool-motion {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 160px;
+  pointer-events: none;
+  color: var(--accent);
+  opacity: 0.4;
+}
+.tool-motion svg {
+  width: 100%;
+  height: 100%;
+  max-height: 160px;
+}
+.tool-motion .motion-detail {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tool-breathe 5s ease-in-out infinite;
+  animation-play-state: paused;
+}
+.tool-motion[data-tool="scan-to-pdf"] .motion-detail {
+  animation-name: tool-scan;
+}
+.tool-motion[data-tool="pdf-organizer"] .motion-detail {
+  animation-name: tool-page;
+}
+.tool-motion[data-tool="file-compressor"] .motion-detail {
+  animation-name: tool-compress;
+}
+.tool-motion[data-tool="application-photo-signature-prep"] .motion-detail {
+  animation-name: tool-crop;
+}
+.tool-motion[data-tool="word-counter"] .motion-detail {
+  animation-name: tool-line;
+}
+.tool-motion[data-tool="character-counter"] .motion-detail {
+  animation-name: tool-character;
+}
+.tool-motion[data-tool="case-converter"] .motion-detail {
+  animation-name: tool-case;
+}
+.tool-motion[data-tool="qr-code-generator"] .motion-detail {
+  animation-name: tool-qr;
+}
+.tool-motion[data-tool="password-generator"] .motion-detail {
+  animation-name: tool-orbit;
+  animation-duration: 24s;
+}
+.tool-motion[data-tool="invoice-receipt-maker"] .motion-detail {
+  animation-name: tool-ledger;
+}
+.tool-motion[data-tool="percentage-discount-calculator"] .motion-detail {
+  animation-name: tool-percentage;
+}
+.tool-motion[data-tool="age-date-calculator"] .motion-detail {
+  animation-name: tool-date;
+}
+.tool-motion .motion-row-1,
+.tool-motion .motion-page-1 {
+  animation-delay: -1s;
+}
+.tool-motion .motion-row-2,
+.tool-motion .motion-page-2 {
+  animation-delay: -2s;
+}
+.tool-motion[data-running="true"] .motion-detail {
+  animation-play-state: running;
+}
+@keyframes tool-breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes tool-scan {
+  50% {
+    transform: translateY(64px);
+    opacity: 0.5;
+  }
+}
+@keyframes tool-page {
+  50% {
+    transform: translate(4px, -6px);
+  }
+}
+@keyframes tool-compress {
+  50% {
+    transform: scaleX(0.5);
+  }
+}
+@keyframes tool-crop {
+  50% {
+    transform: scale(0.9);
+  }
+}
+@keyframes tool-line {
+  50% {
+    transform: scaleX(0.82);
+    opacity: 0.6;
+  }
+}
+@keyframes tool-character {
+  50% {
+    opacity: 0.2;
+    transform: translateY(-2px);
+  }
+}
+@keyframes tool-case {
+  50% {
+    transform: scaleY(0.75);
+  }
+}
+@keyframes tool-qr {
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes tool-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes tool-ledger {
+  50% {
+    transform: scaleX(0.88);
+    opacity: 0.5;
+  }
+}
+@keyframes tool-percentage {
+  50% {
+    transform: translateY(-5px) scale(0.9);
+  }
+}
+@keyframes tool-date {
+  50% {
+    transform: translateX(6px);
+    opacity: 0.5;
+  }
+}
 .catalog-shell > .catalog-search .search-field {
   min-height: 56px;
   border-radius: var(--radius-md);
-  transition: border-color var(--motion-state), box-shadow var(--motion-state);
+  transition:
+    border-color var(--motion-state),
+    box-shadow var(--motion-state);
 }
 .catalog-shell > .catalog-search input {
   min-height: 54px;
@@ -1703,7 +1900,9 @@ body:has(dialog[open]) {
   color: var(--mark);
 }
 .catalog-shell .catalog-card {
-  transition: border-color var(--motion-state), background-color var(--motion-state);
+  transition:
+    border-color var(--motion-state),
+    background-color var(--motion-state);
 }
 .catalog-shell .catalog-card:hover {
   background: #fcfbf8;

@@ -6,6 +6,7 @@ import { tools, getTool, categories } from "@/data/tools";
 import { ToolWorkspace } from "@/components/workspaces/ToolWorkspace";
 import { UtilityView } from "@/components/utilities/UtilityView";
 import { SITE_URL } from "@/lib/site";
+import { ToolMotion } from "@/components/product/ToolMotion";
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
   return tools.map(({ slug }) => ({ slug }));
@@ -70,6 +71,7 @@ export default async function UtilityPage({ params }: Props) {
         </nav>
       )}
       <header className="utility-heading">
+        <ToolMotion tool={tool.slug} />
         <h1>{tool.name}</h1>
         <p>{tool.description}</p>
         <p className="hint">

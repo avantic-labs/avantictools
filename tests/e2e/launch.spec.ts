@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { socialLinks } from "../../data/socials";
+import { tools } from "../../data/tools";
 
 test("homepage motion supports reduced motion without interrupting discovery", async ({
   page,
@@ -18,7 +19,10 @@ test("homepage motion supports reduced motion without interrupting discovery", a
   expect((await search.boundingBox())!.y).toBeLessThan(
     page.viewportSize()!.width < 768 ? 400 : 500,
   );
-  await expect(page.locator(".hero-motion")).toHaveCSS("pointer-events", "none");
+  await expect(page.locator(".hero-motion")).toHaveCSS(
+    "pointer-events",
+    "none",
+  );
   await expect(page.locator(".hero-motion")).toHaveCSS(
     "background-color",
     "rgba(0, 0, 0, 0)",
@@ -40,14 +44,13 @@ test("homepage motion supports reduced motion without interrupting discovery", a
 
   await page.locator("#tools").scrollIntoViewIfNeeded();
   await page.waitForTimeout(150);
-  const offscreenFrame = await canvas.evaluate((element: HTMLCanvasElement) =>
-    element.toDataURL(),
-  );
-  await page.waitForTimeout(500);
-  expect(
-    await canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL()),
-  ).toBe(offscreenFrame);
-  await canvas.scrollIntoViewIfNeeded();
+  // Protected catalog rows can cover every moving dot at some widths. The
+  // ambient layer must still follow the viewport without adding a layout block.
+  const bounds = (await canvas.boundingBox())!;
+  expect(bounds.y).toBe(72);
+  expect(bounds.width).toBe(page.viewportSize()!.width);
+  await expect(page.locator(".hero-motion")).toHaveCSS("position", "fixed");
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForTimeout(100);
   const staticFrame = await canvas.evaluate((element: HTMLCanvasElement) =>
@@ -59,6 +62,58 @@ test("homepage motion supports reduced motion without interrupting discovery", a
   ).toBe(staticFrame);
   await page.getByRole("searchbox").fill("invoice");
   await expect(page.locator(".catalog-card")).toHaveCount(1);
+});
+
+test("typing preserves discovery layout and each tool has a quiet, pausable motion", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const heading = page.getByRole("heading", { level: 1 });
+  await expect(heading).toHaveAccessibleName("Useful tools. No friction.");
+  const before = await heading.boundingBox();
+  const searchBefore = await page.getByRole("searchbox").boundingBox();
+  await page.waitForTimeout(1600);
+  expect(await heading.boundingBox()).toEqual(before);
+  expect(await page.getByRole("searchbox").boundingBox()).toEqual(searchBefore);
+  for (const tool of tools) {
+    await page.goto(`/tools/${tool.slug}`);
+    await expect(page.locator(".hero-motion")).toHaveCount(0);
+    const motion = page.locator(".tool-motion");
+    await expect(motion).toHaveAttribute("aria-hidden", "true");
+    await expect(motion).toHaveCSS("pointer-events", "none");
+    await expect(motion).toHaveAttribute("data-running", "true");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(tool.name);
+  }
+  // Use a long workspace: on tall screens a short calculator and its footer
+  // can both fit, so scrolling to that footer would not hide its heading.
+  await page.goto("/tools/invoice-receipt-maker");
+  await page.getByRole("contentinfo").scrollIntoViewIfNeeded();
+  await expect(page.locator(".tool-motion")).toHaveAttribute(
+    "data-running",
+    "false",
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.getByRole("heading", { level: 1 }).scrollIntoViewIfNeeded();
+  await expect(page.locator(".tool-motion")).toHaveAttribute(
+    "data-running",
+    "false",
+  );
+  const animations = await page
+    .locator(".tool-motion .motion-detail")
+    .evaluateAll((elements) =>
+      elements.map((element) => getComputedStyle(element).animationName),
+    );
+  expect(animations.every((name) => name === "none")).toBe(true);
+  await page.goto("/");
+  expect(
+    await page
+      .locator(".typing-line")
+      .evaluateAll((elements) =>
+        elements.every(
+          (element) => getComputedStyle(element).clipPath === "none",
+        ),
+      ),
+  ).toBe(true);
 });
 
 test("primary search is visible, keyboard usable and keeps mobile category navigation contained", async ({
@@ -216,6 +271,7 @@ test("capture intent, reduced motion and official external links are explicit", 
       await expect(link).toHaveAttribute("href", href);
       await expect(link).toHaveAttribute("target", "_blank");
       await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      await expect(link.locator('svg[aria-hidden="true"]')).toHaveCount(1);
     }
     expect(
       (

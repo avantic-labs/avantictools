@@ -4,7 +4,7 @@
     "passed": 83
   },
   "playwright": {
-    "passed": 288,
+    "passed": 296,
     "profiles": [
       320,
       360,
@@ -15,12 +15,13 @@
       1280,
       1920
     ],
-    "includesAccessibilityAndPrivacy": true
+    "includesAccessibilityAndPrivacy": true,
+    "durationMinutes": 5.6
   },
   "bundles": [
     {
       "path": "/",
-      "gzipBytes": 147501,
+      "gzipBytes": 148289,
       "scriptCount": 9,
       "pdfRuntime": false,
       "invoiceRuntime": false,
@@ -29,7 +30,7 @@
     },
     {
       "path": "/tools/word-counter",
-      "gzipBytes": 148676,
+      "gzipBytes": 148927,
       "scriptCount": 9,
       "pdfRuntime": false,
       "invoiceRuntime": false,
@@ -38,7 +39,7 @@
     },
     {
       "path": "/tools/age-date-calculator",
-      "gzipBytes": 150683,
+      "gzipBytes": 150934,
       "scriptCount": 10,
       "pdfRuntime": false,
       "invoiceRuntime": false,
@@ -47,7 +48,7 @@
     },
     {
       "path": "/tools/qr-code-generator",
-      "gzipBytes": 158905,
+      "gzipBytes": 159156,
       "scriptCount": 10,
       "pdfRuntime": false,
       "invoiceRuntime": false,
@@ -56,7 +57,7 @@
     },
     {
       "path": "/tools/pdf-organizer",
-      "gzipBytes": 158603,
+      "gzipBytes": 158854,
       "scriptCount": 10,
       "pdfRuntime": false,
       "invoiceRuntime": false,
@@ -65,7 +66,7 @@
     },
     {
       "path": "/tools/invoice-receipt-maker",
-      "gzipBytes": 159479,
+      "gzipBytes": 159730,
       "scriptCount": 11,
       "pdfRuntime": false,
       "invoiceRuntime": false,
@@ -76,16 +77,16 @@
   "lighthouse": {
     "profile": "standard simulated mobile",
     "scores": {
-      "performance": 0.96,
+      "performance": 0.99,
       "accessibility": 1,
       "best-practices": 1,
       "seo": 1
     },
     "metrics": {
-      "largest-contentful-paint": 2749.352,
+      "largest-contentful-paint": 2069.1710000000003,
       "cumulative-layout-shift": 0,
       "total-blocking-time": 31.5,
-      "speed-index": 757.568
+      "speed-index": 766.114
     }
   },
   "productionDependencyVulnerabilities": 0,
@@ -98,5 +99,18 @@
     "package": "unrs-resolver@1.11.1",
     "scriptAllowed": false,
     "isolatedCleanInstallAndResolutionPassed": true
+  },
+  "motion": {
+    "scope": "Full homepage ambient canvas; distinct SVG heading treatment on each tool",
+    "homepageAddedGzipBytes": 788,
+    "toolAddedGzipBytes": 251,
+    "libraryAdded": false,
+    "headlineLayoutReserved": true,
+    "reducedMotion": true,
+    "hiddenEventBrowserCheck": {
+      "homepagePaused": true,
+      "toolPaused": true,
+      "method": "Synthetic document visibility event in Chromium"
+    }
   }
 }

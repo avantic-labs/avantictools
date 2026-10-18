@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Catalog } from "@/components/product/Catalog";
 import { HeroMotion } from "@/components/product/HeroMotion";
+import { HomeHeadline } from "@/components/product/HomeHeadline";
 import { tools, comingSoon } from "@/data/tools";
 export const metadata = {
   ...pageMetadata(
@@ -15,7 +16,8 @@ export const metadata = {
 };
 export default function HomePage() {
   return (
-    <main id="main" className="catalog-shell">
+    <main id="main" className="catalog-shell home-catalog">
+      <HeroMotion />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -31,17 +33,12 @@ export default function HomePage() {
       />
       <section className="product-intro">
         <div className="intro-copy">
-          <h1>
-            Useful tools.
-            <br />
-            No friction.
-          </h1>
+          <HomeHeadline />
           <p>
             Scan documents, fix files, prepare applications and handle everyday
             tasks.
           </p>
         </div>
-        <HeroMotion />
       </section>
       <Catalog tools={tools}>
         <nav className="popular-actions" aria-label="Popular actions">

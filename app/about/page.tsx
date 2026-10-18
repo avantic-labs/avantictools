@@ -72,7 +72,7 @@ export default function About() {
         product updates and community conversations. These links open other
         services in a new tab; their privacy policies apply there.
       </p>
-      <SocialLinks />
+      <SocialLinks showLabels />
       <div>
         <Link href="/#tools" className="button" prefetch={false}>
           Browse tools

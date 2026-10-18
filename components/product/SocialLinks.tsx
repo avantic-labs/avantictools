@@ -1,9 +1,21 @@
 import { socialLinks } from "@/data/socials";
+import { SocialIcon } from "./SocialIcon";
 
-export function SocialLinks() {
+const platforms = {
+  Instagram: "instagram",
+  X: "x",
+  YouTube: "youtube",
+  GitHub: "github",
+  Telegram: "telegram",
+  Facebook: "facebook",
+  "WhatsApp Community": "whatsapp",
+  "WhatsApp Channel": "whatsapp",
+} as const;
+
+export function SocialLinks({ showLabels = false }: { showLabels?: boolean }) {
   return (
     <nav
-      className="social-links"
+      className={`social-links${showLabels ? " social-links-labelled" : ""}`}
       aria-label="AVANTIC LABS social and community accounts"
     >
       {socialLinks.map(([name, href]) => (
@@ -13,8 +25,14 @@ export function SocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`AVANTIC LABS on ${name} (opens in a new tab)`}
+          title={`${name} (opens in a new tab)`}
         >
-          {name}
+          <SocialIcon platform={platforms[name]} />
+          {showLabels ? (
+            <span>{name}</span>
+          ) : name.startsWith("WhatsApp ") ? (
+            <span>{name.replace("WhatsApp ", "")}</span>
+          ) : null}
         </a>
       ))}
     </nav>

@@ -13,4 +13,6 @@ apart from proportional identity crops/resizing.
 - @pdf-lib/fontkit: MIT, as declared in its [source README](https://github.com/Hopding/fontkit#license).
 - Lucide: ISC, with included Feather attribution (`licenses/lucide.txt`).
 
+- Social platform marks: exact [Simple Icons 16.35.0](https://github.com/simple-icons/simple-icons) paths, CC0 (`licenses/simple-icons.txt`). Platform trademarks remain with their owners. Only seven paths are included; no runtime package.
+
 All runtime processing assets are served from this application’s origin.

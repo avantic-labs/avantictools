@@ -21,23 +21,22 @@ export function HeroMotion() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
-    const region = canvas?.closest<HTMLElement>(".product-intro");
+    const region = canvas?.closest<HTMLElement>(".home-catalog");
     if (!canvas || !context || !region) return;
 
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(pointer: fine)");
-    const foreground = Array.from(
-      region.querySelectorAll(".intro-copy h1, .intro-copy p"),
-    );
     let dots: Dot[] = [];
     let width = 0;
     let height = 0;
     let origin = { x: 0, y: 0 };
-    let protectedAreas: Pick<DOMRect, "left" | "right" | "top" | "bottom">[] = [];
+    let protectedAreas: Pick<DOMRect, "left" | "right" | "top" | "bottom">[] =
+      [];
     let visible = false;
     let frame = 0;
     let lastFrame = 0;
     let elapsed = 0;
+    let layoutFrame = 0;
     let pointer = { x: -1000, y: -1000 };
 
     function draw(seconds: number, step = 0) {
@@ -143,20 +142,62 @@ export function HeroMotion() {
         frame = requestAnimationFrame(tick);
     }
 
-    function resize() {
+    function measure() {
       const bounds = canvas!.getBoundingClientRect();
-      width = bounds.width;
-      height = bounds.height;
-      origin = { x: bounds.left + window.scrollX, y: bounds.top + window.scrollY };
-      protectedAreas = foreground.map((element) => {
+      origin = {
+        x: bounds.left + window.scrollX,
+        y: bounds.top + window.scrollY,
+      };
+      protectedAreas = [];
+      const foreground = region!.querySelectorAll(
+        ".intro-copy, .catalog-search, .popular-actions, .trust-line, .section-title, .featured-strip, .category-nav, .catalog-card, .group-heading, .roadmap-grid article",
+      );
+      for (const element of foreground) {
         const rect = element.getBoundingClientRect();
-        return {
+        if (rect.bottom < bounds.top || rect.top > bounds.bottom) continue;
+        let area = {
           left: rect.left - bounds.left - 8,
           right: rect.right - bounds.left + 8,
           top: rect.top - bounds.top - 8,
           bottom: rect.bottom - bounds.top + 8,
         };
+        // Union overlapping protection rectangles so clipping never reopens text.
+        for (let index = 0; index < protectedAreas.length; index++) {
+          const other = protectedAreas[index];
+          if (
+            area.left > other.right ||
+            area.right < other.left ||
+            area.top > other.bottom ||
+            area.bottom < other.top
+          )
+            continue;
+          area = {
+            left: Math.min(area.left, other.left),
+            right: Math.max(area.right, other.right),
+            top: Math.min(area.top, other.top),
+            bottom: Math.max(area.bottom, other.bottom),
+          };
+          protectedAreas.splice(index, 1);
+          index = -1;
+        }
+        protectedAreas.push(area);
+      }
+    }
+
+    function queueMeasure() {
+      if (layoutFrame || document.hidden) return;
+      layoutFrame = requestAnimationFrame(() => {
+        layoutFrame = 0;
+        measure();
+        if (motion.matches) draw(0);
       });
+    }
+
+    function resize() {
+      const bounds = canvas!.getBoundingClientRect();
+      width = bounds.width;
+      height = bounds.height;
+      measure();
       const count = width < 640 ? 24 : 56;
       if (dots.length !== count)
         dots = Array.from({ length: count }, (_, index) => {
@@ -174,7 +215,10 @@ export function HeroMotion() {
             velocityY: 0,
           };
         });
-      const ratio = Math.min(window.devicePixelRatio || 1, width < 640 ? 1.5 : 2);
+      const ratio = Math.min(
+        window.devicePixelRatio || 1,
+        width < 640 ? 1.5 : 2,
+      );
       canvas!.width = Math.round(width * ratio);
       canvas!.height = Math.round(height * ratio);
       context!.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -196,16 +240,22 @@ export function HeroMotion() {
       start();
     });
     resizeObserver.observe(canvas);
-    foreground.forEach((element) => resizeObserver.observe(element));
-    intersectionObserver.observe(canvas);
+    resizeObserver.observe(region);
+    intersectionObserver.observe(region);
+    const contentObserver = new MutationObserver(queueMeasure);
+    contentObserver.observe(region, { childList: true, subtree: true });
+    window.addEventListener("scroll", queueMeasure, { passive: true });
     region.addEventListener("pointermove", move, { passive: true });
     region.addEventListener("pointerleave", leave);
     document.addEventListener("visibilitychange", start);
     motion.addEventListener("change", start);
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(layoutFrame);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      contentObserver.disconnect();
+      window.removeEventListener("scroll", queueMeasure);
       region.removeEventListener("pointermove", move);
       region.removeEventListener("pointerleave", leave);
       document.removeEventListener("visibilitychange", start);
