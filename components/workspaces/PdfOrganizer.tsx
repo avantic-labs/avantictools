@@ -1,4 +1,5 @@
 "use client";
+import { usePageReflow } from "@/lib/use-page-reflow";
 import { useEffect, useEffectEvent, useState } from "react";
 import { ArrowUp, ArrowDown, RotateCw, Trash2 } from "lucide-react";
 import {
@@ -21,6 +22,7 @@ import { ContinueWith } from "./ContinueWith";
 export function PdfOrganizer() {
   const [sources, setSources] = useState<PdfSource[]>([]);
   const [pages, setPages] = useState<PdfPage[]>([]);
+  const pageGrid = usePageReflow(pages.map((page) => page.id).join(","));
   const [result, setResult] = useState<Blob | null>(null);
   const task = useLocalTask();
   async function add(files: File[]) {
@@ -97,9 +99,9 @@ export function PdfOrganizer() {
       {pages.length > 0 && (
         <>
           <h2>{pages.length} pages in this document</h2>
-          <ol className="page-grid" aria-label="PDF pages">
+          <ol ref={pageGrid} className="page-grid" aria-label="PDF pages">
             {pages.map((page, index) => (
-              <li className="page-tile" key={page.id}>
+              <li className="page-tile" data-page-id={page.id} key={page.id}>
                 <div className="page-thumbnail">
                   <LocalImage
                     blob={page.preview}

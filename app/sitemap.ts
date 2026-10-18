@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/",
     "/about",
     "/privacy",
+    "/terms",
     ...categories.map((category) => `/categories/${category.id}`),
     ...tools.map((tool) => `/tools/${tool.slug}`),
   ].map((path) => ({

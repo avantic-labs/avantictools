@@ -1,4 +1,3 @@
-import { PDFDocument } from "pdf-lib";
 import type { PDFPageProxy, PageViewport } from "pdfjs-dist";
 import {
   FILE_LIMITS,
@@ -152,6 +151,7 @@ export async function scanToPdf(
 ): Promise<Blob> {
   if (!pages.length || pages.length > FILE_LIMITS.pages)
     throw new FileProblem("Add between 1 and 50 pages.");
+  const { PDFDocument } = await import("pdf-lib");
   const output = await PDFDocument.create();
   for (const [index, source] of pages.entries()) {
     const canvas = await prepareImage(source.file, source.settings);
@@ -198,6 +198,7 @@ export async function compressPdf(
   const bytes = new Uint8Array(await file.arrayBuffer());
   await pdfWorker<number>({ operation: "inspect", bytes });
   const source = await renderer(bytes);
+  const { PDFDocument } = await import("pdf-lib");
   const output = await PDFDocument.create();
   const options = QUALITY_PRESETS[preset];
   try {

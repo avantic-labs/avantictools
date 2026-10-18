@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/page-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tools, getTool, categories } from "@/data/tools";
 import { ToolWorkspace } from "@/components/workspaces/ToolWorkspace";
 import { UtilityView } from "@/components/utilities/UtilityView";
 import { SITE_URL } from "@/lib/site";
+import { ToolMotion } from "@/components/product/ToolMotion";
 type Props = { params: Promise<{ slug: string }> };
 export function generateStaticParams() {
   return tools.map(({ slug }) => ({ slug }));
@@ -14,17 +16,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tool = getTool(slug);
   return tool
-    ? {
-        title: tool.name,
-        description: `${tool.description} Free, private and on your device. A product of AVANTIC LABS.`,
-        alternates: { canonical: `/tools/${slug}` },
-        openGraph: {
-          title: tool.name,
-          description: tool.description,
-          url: `/tools/${slug}`,
-        },
-        twitter: { title: tool.name, description: tool.description },
-      }
+    ? pageMetadata(
+        tool.name,
+        `${tool.description} Work locally in your browser, without an account.`,
+        `/tools/${slug}`,
+      )
     : {};
 }
 export default async function UtilityPage({ params }: Props) {
@@ -55,7 +51,7 @@ export default async function UtilityPage({ params }: Props) {
   return (
     <main
       id="main"
-      className={`utility-shell${tool.family === "files" || tool.family === "images" ? " document-workspace" : ""}`}
+      className={`utility-shell${tool.family === "files" || tool.family === "images" || tool.slug === "invoice-receipt-maker" ? " document-workspace" : ""}${tool.slug === "invoice-receipt-maker" ? " invoice-page" : ""}`}
     >
       {tool.family === "files" && (
         <nav className="workflow-family" aria-label="AVANTIC Files">
@@ -75,6 +71,7 @@ export default async function UtilityPage({ params }: Props) {
         </nav>
       )}
       <header className="utility-heading">
+        <ToolMotion tool={tool.slug} />
         <h1>{tool.name}</h1>
         <p>{tool.description}</p>
         <p className="hint">

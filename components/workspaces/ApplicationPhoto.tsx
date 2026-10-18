@@ -128,25 +128,14 @@ export function ApplicationPhoto() {
         onFiles={choose}
       />
       <p className="hint">
-        Use the portal’s current instructions. The values below are custom
-        settings, not official portal requirements. The background remains as
-        photographed.
+        Enter the size required by your portal. Requirements vary, so confirm
+        them before exporting.
       </p>
       <TaskStatus task={task} />
       {file && (
         <>
-          <ImageEditor
-            file={file}
-            settings={settings}
-            disabled={task.busy}
-            signature={mode === "signature"}
-            onChange={(value) => {
-              setSettings(value);
-              clearResult();
-            }}
-          />
           <fieldset className="editing-controls" disabled={task.busy}>
-            <legend>Custom output</legend>
+            <legend>Portal requirements</legend>
             <div className="paired-fields">
               <label className="field">
                 Width
@@ -240,6 +229,17 @@ export function ApplicationPhoto() {
               transparent for PNG. Millimetres convert to pixels at 300 DPI.
             </p>
           </fieldset>
+          <ImageEditor
+            file={file}
+            settings={settings}
+            disabled={task.busy}
+            signature={mode === "signature"}
+            onChange={(value) => {
+              setSettings(value);
+              clearResult();
+            }}
+          />
+
           <div className="actions">
             <button
               type="button"

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
 import { categories, type Tool, type CategoryId } from "@/data/tools";
@@ -8,10 +8,24 @@ import { matchesTool } from "@/lib/utilities/search";
 export function Catalog({
   tools,
   category,
+  children,
 }: {
   tools: readonly Tool[];
   category?: CategoryId;
+  children?: ReactNode;
 }) {
+  const rail = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    if (!category) return;
+    const node = rail.current;
+    const current = node?.querySelector<HTMLElement>("[aria-current]");
+    if (node && current)
+      node.scrollLeft =
+        current.offsetLeft -
+        node.offsetLeft -
+        (node.clientWidth - current.clientWidth) / 2;
+  }, [category]);
+  const results = useRef<HTMLElement>(null);
   const [query, setQuery] = useState("");
   const filtered = tools.filter(
     (tool) =>
@@ -28,15 +42,25 @@ export function Catalog({
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Try ‘photo size’, ‘PDF’ or ‘discount’"
+            placeholder="PDF, photo, discount"
             autoComplete="off"
+            aria-controls="tools"
+            onKeyDown={(event) => {
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                results.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+              }
+              if (event.key === "Escape") setQuery("");
+            }}
           />
         </div>
         <p className="sr-only" role="status">
           {filtered.length} tools found
         </p>
       </section>
+      {!query.trim() && children}
       <nav
+        ref={rail}
         id="categories"
         className="category-nav"
         aria-label="Tool categories"
@@ -55,11 +79,46 @@ export function Catalog({
             prefetch={false}
             aria-current={category === item.id ? "page" : undefined}
           >
-            {item.name}
+            <span className="category-full">{item.name}</span>
+            <span className="category-short" aria-hidden="true">
+              {
+                {
+                  files: "Files",
+                  applications: "Applications",
+                  writing: "Writing",
+                  business: "Business",
+                  everyday: "Everyday",
+                }[item.id]
+              }
+            </span>
           </Link>
         ))}
       </nav>
       <section
+        ref={results}
+        onKeyDown={(event) => {
+          if (!["ArrowDown", "ArrowUp", "Escape"].includes(event.key)) return;
+          const links = Array.from(
+            results.current?.querySelectorAll<HTMLAnchorElement>(
+              ".catalog-card a",
+            ) ?? [],
+          );
+          const index = links.indexOf(event.target as HTMLAnchorElement);
+          if (index < 0) return;
+          event.preventDefault();
+          if (
+            event.key === "Escape" ||
+            (event.key === "ArrowUp" && index === 0)
+          )
+            document.getElementById("tool-search")?.focus();
+          else
+            links[
+              Math.min(
+                links.length - 1,
+                Math.max(0, index + (event.key === "ArrowDown" ? 1 : -1)),
+              )
+            ]?.focus();
+        }}
         id="tools"
         className="available-tools"
         aria-label="Available tools"

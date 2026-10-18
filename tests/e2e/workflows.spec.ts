@@ -187,6 +187,15 @@ test("catalog, search, categories, Coming Soon, metadata and 404 are intentional
   await expect(
     page.getByRole("link", { name: "Browse tools", exact: true }).first(),
   ).toBeVisible();
+  await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute(
+    "content",
+    /^https:\/\/avantictools\.vercel\.app\//,
+  );
+  await expect(page.locator('meta[name="twitter:image"]').first()).toHaveAttribute(
+    "content",
+    /^https:\/\/avantictools\.vercel\.app\//,
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
   expect(
     await page.evaluate(async () => (await fetch("/sitemap.xml")).status),
   ).toBe(200);
@@ -496,6 +505,8 @@ test("invoice and merchant receipt calculate exact NGN totals and export long mo
   await page
     .getByLabel("Customer name *", { exact: true })
     .fill("Synthetic customer");
+  if (!(await page.getByLabel("Item 1 *", { exact: true }).isVisible()))
+    await page.getByRole("button", { name: /2. What was sold/ }).click();
   await page
     .getByLabel("Item 1 *", { exact: true })
     .fill("A long description of a completed design service. ".repeat(8));
@@ -511,6 +522,12 @@ test("invoice and merchant receipt calculate exact NGN totals and export long mo
   await expect(page.locator(".invoice-summary .total")).toContainText(
     "₦3,387.22",
   );
+  if (
+    !(await page
+      .getByLabel("Payment / bank-transfer details", { exact: true })
+      .isVisible())
+  )
+    await page.getByRole("button", { name: /3. Payment & finish/ }).click();
   await page
     .getByLabel("Payment / bank-transfer details", { exact: true })
     .fill("Synthetic payment details");
@@ -601,7 +618,7 @@ test("all public routes have unique metadata, valid internal links and truthful 
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator(".roadmap-grid article")).toHaveCount(7);
+  await expect(page.locator(".roadmap-grid article")).toHaveCount(3);
   await expect(page.locator(".roadmap-grid a")).toHaveCount(0);
   const routes = await page
     .locator("a")
