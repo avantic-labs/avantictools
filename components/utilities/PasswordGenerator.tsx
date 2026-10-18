@@ -31,12 +31,14 @@ export function PasswordGenerator() {
 
   function generate() {
     if (validation) return;
+    trackUtilityEvent("password-generator", "tool_started");
     try {
       setPassword(generatePassword(options));
       setRevision((current) => current + 1);
       setMessage("New password generated.");
       trackUtilityEvent("password-generator", "tool_completed", "generate");
     } catch {
+      trackUtilityEvent("password-generator", "tool_error", "browser_unsupported");
       setPassword("");
       setMessage("Secure generation is unavailable in this browser. Try a current browser over HTTPS.");
     }

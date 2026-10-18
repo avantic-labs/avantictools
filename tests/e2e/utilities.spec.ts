@@ -420,17 +420,23 @@ test("private inputs, outputs and settings stay off network, console and storage
 
     const events = await page.evaluate(() => window.utilityTest.events);
     expect(events.some((event) => event.name === "tool_viewed")).toBe(true);
+    expect(events.some((event) => event.name === "tool_started")).toBe(true);
     expect(events.some((event) => event.name === "tool_completed")).toBe(true);
     for (const event of events) {
       expect(Object.keys(event).sort()).toEqual(["name", "properties"]);
-      expect(["tool_viewed", "tool_completed"].includes(event.name)).toBe(true);
-      expect(event.properties.tool_id === tool.slug).toBe(true);
-      if (event.name === "tool_viewed") {
+      expect(JSON.stringify(event)).not.toContain(syntheticPrivateText);
+      expect(["page_view", "tool_viewed", "tool_started", "tool_completed", "download_completed"].includes(event.name)).toBe(true);
+      if (event.name !== "page_view") expect(event.properties.tool_id === tool.slug).toBe(true);
+      if (event.name === "tool_viewed")
+        expect(Object.keys(event.properties).sort()).toEqual(["category", "tool_id"]);
+      if (event.name === "tool_started")
         expect(Object.keys(event.properties)).toEqual(["tool_id"]);
-      } else {
-        expect(Object.keys(event.properties).sort()).toEqual(["action", "tool_id"]);
-        expect(["count", "convert", "generate", "copy", "download"].includes(String(event.properties.action))).toBe(true);
+      if (event.name === "tool_completed") {
+        expect(Object.keys(event.properties).sort()).toEqual(["completion_action", "tool_id"]);
+        expect(["count", "convert", "generate", "copy"].includes(String(event.properties.completion_action))).toBe(true);
       }
+      if (event.name === "download_completed")
+        expect(event.properties).toEqual({ tool_id: tool.slug, output_type: "png" });
     }
 
     page.off("request", observeRequest);

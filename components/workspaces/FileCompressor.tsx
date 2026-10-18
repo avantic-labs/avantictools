@@ -16,7 +16,7 @@ export function FileCompressor() {
   const [file, setFile] = useState<File | null>(null);
   const [preset, setPreset] = useState<QualityPreset>("balanced");
   const [result, setResult] = useState<Blob | null>(null);
-  const task = useLocalTask();
+  const task = useLocalTask("file-compressor");
   const isPdf =
     file?.type === "application/pdf" ||
     file?.name.toLowerCase().endsWith(".pdf");

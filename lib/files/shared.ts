@@ -14,6 +14,17 @@ export const QUALITY_PRESETS = {
 } as const;
 
 export class FileProblem extends Error {}
+export function fileErrorCode(error: unknown) {
+  if (!(error instanceof FileProblem)) return "export_failed" as const;
+  const message = error.message.toLowerCase();
+  if (message.includes("encrypted") || message.includes("password-protected")) return "encrypted_pdf" as const;
+  if (message.includes("50 pages") || message.includes("too many") || message.includes("between 1 and 50")) return "too_many_pages" as const;
+  if (message.includes("too large") || message.includes("under 20 mb") || message.includes("under 40 mb") || message.includes("below 80 mb")) return "file_too_large" as const;
+  if (message.includes("memory") || message.includes("device") || message.includes("16,384")) return "memory_limit" as const;
+  if (message.includes("unsupported") || message.includes("valid jpeg") || message.includes("format")) return "unsupported_format" as const;
+  if (message.includes("damaged") || message.includes("could not be opened") || message.includes("empty")) return "corrupted_file" as const;
+  return "export_failed" as const;
+}
 export function fileMessage(error: unknown): string {
   return error instanceof FileProblem
     ? error.message

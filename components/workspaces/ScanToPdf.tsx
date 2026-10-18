@@ -29,7 +29,7 @@ export function ScanToPdf() {
   const [selected, setSelected] = useState("");
   const pageGrid = usePageReflow(pages.map((page) => page.id).join(","));
   const [result, setResult] = useState<Blob | null>(null);
-  const task = useLocalTask();
+  const task = useLocalTask("scan-to-pdf");
   const current = pages.find((page) => page.id === selected) ?? pages[0];
   async function add(files: File[]) {
     const added = await task.run("Opening photos", async () => {
@@ -240,10 +240,10 @@ export function ScanToPdf() {
             </p>
           </ResultPanel>
           <div className="actions">
-            <ContinueWith blob={result} target="pdf-organizer">
+            <ContinueWith blob={result} from="scan-to-pdf" target="pdf-organizer">
               Organize this PDF
             </ContinueWith>
-            <ContinueWith blob={result} target="file-compressor">
+            <ContinueWith blob={result} from="scan-to-pdf" target="file-compressor">
               Compress this PDF
             </ContinueWith>
           </div>

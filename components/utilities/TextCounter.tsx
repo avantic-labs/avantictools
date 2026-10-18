@@ -15,6 +15,7 @@ export function TextCounter({ mode }: { mode: "word" | "character" }) {
   function updateText(value: string) {
     setText(value);
     if (value && !completed.current) {
+      trackUtilityEvent(`${mode}-counter`, "tool_started");
       trackUtilityEvent(`${mode}-counter`, "tool_completed", "count");
       completed.current = true;
     }

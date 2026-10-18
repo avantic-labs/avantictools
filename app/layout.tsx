@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/product/SiteChrome";
+import { AnalyticsProvider } from "@/components/product/AnalyticsProvider";
 import { SITE_URL, ALLOW_INDEXING } from "@/lib/site";
 
 // Preload UI weights; other glyphs use the device font without network requests.
@@ -73,6 +74,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={interfaceFont.variable}>
       <body>
+        <AnalyticsProvider
+          apiKey={process.env.NEXT_PUBLIC_POSTHOG_KEY}
+          host={process.env.NEXT_PUBLIC_POSTHOG_HOST}
+        />
         <SiteHeader />
         {children}
         <SiteFooter />

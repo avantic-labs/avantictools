@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Catalog } from "@/components/product/Catalog";
 import { HeroMotion } from "@/components/product/HeroMotion";
 import { HomeHeadline } from "@/components/product/HomeHeadline";
+import { TrackedToolLink } from "@/components/product/TrackedToolLink";
 import { tools, comingSoon } from "@/data/tools";
 export const metadata = {
   ...pageMetadata(
@@ -42,18 +43,18 @@ export default function HomePage() {
       </section>
       <Catalog tools={tools}>
         <nav className="popular-actions" aria-label="Popular actions">
-          <Link href="/tools/scan-to-pdf" prefetch={false}>
+          <TrackedToolLink tool="scan-to-pdf" href="/tools/scan-to-pdf" prefetch={false}>
             Scan to PDF
-          </Link>
-          <Link href="/tools/file-compressor" prefetch={false}>
+          </TrackedToolLink>
+          <TrackedToolLink tool="file-compressor" href="/tools/file-compressor" prefetch={false}>
             Compress a file
-          </Link>
-          <Link href="/tools/application-photo-signature-prep" prefetch={false}>
+          </TrackedToolLink>
+          <TrackedToolLink tool="application-photo-signature-prep" href="/tools/application-photo-signature-prep" prefetch={false}>
             Prepare a photo
-          </Link>
-          <Link href="/tools/invoice-receipt-maker" prefetch={false}>
+          </TrackedToolLink>
+          <TrackedToolLink tool="invoice-receipt-maker" href="/tools/invoice-receipt-maker" prefetch={false}>
             Create an invoice
-          </Link>
+          </TrackedToolLink>
         </nav>
         <p className="trust-line">
           No account required. Your files and inputs are processed on your

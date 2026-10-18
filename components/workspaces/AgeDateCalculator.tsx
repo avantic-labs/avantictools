@@ -29,6 +29,7 @@ export function AgeDateCalculator() {
   }
   function calculate(event: React.FormEvent) {
     event.preventDefault();
+    trackUtilityEvent("age-date-calculator", "tool_started");
     clearResult();
     try {
       if (mode === "age" || mode === "difference") {
@@ -61,6 +62,7 @@ export function AgeDateCalculator() {
       }
       trackUtilityEvent("age-date-calculator", "tool_completed", "calculate");
     } catch {
+      trackUtilityEvent("age-date-calculator", "tool_error", "invalid_input");
       setError(
         "Choose valid dates. For age and date difference, the end date must be on or after the start date.",
       );
